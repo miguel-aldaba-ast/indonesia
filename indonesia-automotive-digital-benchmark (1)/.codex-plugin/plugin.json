@@ -1,0 +1,27 @@
+{
+  "interface": {
+    "displayName": "Indonesia Automotive Digital Benchmark",
+    "shortDescription": "Benchmark digital capabilities across Indonesian automotive brand websites.",
+    "longDescription": "Research and compare the digital customer experience and functionality of automotive brand websites in Indonesia. Identify capabilities, differences in maturity, emerging functionality, best practices and relevant gaps, supported by direct website evidence and visual examples.",
+    "developerName": "Astara Intelligence",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": "Compare the digital capabilities of these automotive brands in Indonesia.",
+    "suggestedPrompts": [
+      "Compare the digital capabilities of these automotive brands in Indonesia.",
+      "Benchmark these websites and identify advanced or distinctive capabilities.",
+      "Create an Indonesia automotive digital benchmark presentation from these URLs.",
+      "Compare these brands across the full digital customer journey."
+    ]
+  },
+  "name": "indonesia-automotive-digital-benchmark",
+  "version": "0.4.2",
+  "description": "Benchmark digital capabilities across Indonesian automotive brand websites.",
+  "author": {
+    "name": "Astara Intelligence"
+  },
+  "keywords": [],
+  "skills": "./skills"
+}
