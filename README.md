@@ -22,31 +22,45 @@ that hand-off is intentional).
 
 ## Current status
 
-Three real, interactively-verified snapshots trace how coverage grew:
-`2026-09-24` (4 brands, pilot), `2026-09-24-2` (8 brands), and
-`2026-09-24-3` — the current one — covering all **14** brands: Toyota,
-Honda, Mitsubishi, BYD, Daihatsu, Suzuki, Hyundai, Wuling, Jaecoo, Isuzu,
-Geely, Chery, MG, VinFast. This is a provisional brand list built from
-public research, not the internal DCI report — swap in the exact DCI names
-whenever you have them (see `data/snapshots/2026-09-24-3/evidence.csv`,
-just relabel the `brand` column, no schema change needed).
+Four real, interactively-verified snapshots trace how coverage grew:
+`2026-09-24` (4 brands, pilot) → `2026-09-24-2` (8 brands) → `2026-09-24-3`
+(all 14 brands, first pass) → `2026-09-24-4` — the current one — same 14
+brands with a second gap-filling research pass: Toyota, Honda, Mitsubishi,
+BYD, Daihatsu, Suzuki, Hyundai, Wuling, Jaecoo, Isuzu, Geely, Chery, MG,
+VinFast. This is a provisional brand list built from public research, not
+the internal DCI report — swap in the exact DCI names whenever you have
+them (see `data/snapshots/2026-09-24-4/evidence.csv`, just relabel the
+`brand` column, no schema change needed).
 
-88 evidence rows across **18 distinct capabilities** and **12 of 14**
-taxonomy categories (`reports/<date>/report.md` names the 2 still untouched:
-OMNICHANNEL and EMERGING EXPERIENCES) — a deliberately wide first pass, not
-the full ~150-capability taxonomy. Some standout, real findings from this
-pass: VinFast has the deepest configurator-to-reservation flow and the only
-fully calculated cost-of-ownership tool in the sample; Isuzu has real fleet
-telematics (Isuzu Link) and a customer-account app (MyIsuzuID) that no other
-brand in this sample has; MG's chat widget is the only one that doesn't
-require a name/phone/email before you can type a message; several brands'
+119 evidence rows across **19 distinct capabilities** and **13 of 14**
+taxonomy categories (`reports/<date>/report.md` names the 1 still untouched:
+OMNICHANNEL) — a wide, still-growing pass, not the full ~150-capability
+taxonomy. Standout real findings: Toyota's ecosystem turned out to be the
+deepest of the sample once its footer sitemap was actually explored —
+T-Intouch (8+ named connected-car features plus an on-page VIN checker),
+G-Fleet (real-time fleet telematics, matching Isuzu Link), and KINTO (a
+fully online, no-down-payment car subscription — the only vehicle
+subscription found in the sample, and the reason EMERGING EXPERIENCES is no
+longer empty); VinFast still has the deepest single configurator-to-
+reservation flow and the only fully calculated cost-of-ownership tool;
+MG's i-SMART app is the only EV app found that folds a charging-station
+map into the app itself rather than a separate page; several brands'
 "finance calculators" turned out to be lead-capture gates rather than actual
 calculators once clicked through. Rows marked `Partial`/`?` are cases where
-a tool was found but couldn't be fully verified in that session, or a site
-actively blocked automated browsing (Cloudflare on one Daihatsu subdomain) —
-each one says why in its `limitations` field. Extend coverage by running
-another research pass over more capabilities (or the exact DCI brand list)
-and ingesting it as a new snapshot — nothing about the pipeline changes.
+a tool was found but couldn't be fully verified in that session, a site
+actively blocked automated browsing (Cloudflare on one Daihatsu subdomain),
+or a previously-indexed page now 404s (Suzuki's `/compare`) — each one says
+why in its `limitations` field. Extend coverage by running another research
+pass — more capabilities, OMNICHANNEL, or the exact DCI brand list — and
+ingesting it as a new snapshot; nothing about the pipeline changes.
+
+**A note on location-based tools:** dealer/charging-station locators that
+offer a "use my location" button were deliberately not exercised that way
+in this session — the browsing session itself is physically outside
+Indonesia, so a geolocation prompt would return an irrelevant nearby
+location (e.g. Madrid) instead of anywhere in Indonesia. Locators were
+tested via explicit city/province search fields instead, or left as
+"entry point confirmed, not searched" where no such field existed.
 
 No single brand is a default "reference" anywhere in the pipeline: the
 `--focus-brand` CLI flag only adds an extra narrative section to the written
