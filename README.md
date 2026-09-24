@@ -22,16 +22,37 @@ that hand-off is intentional).
 
 ## Current status
 
-`data/snapshots/2026-09-24/` is a real first pass covering 4 brands (Toyota,
-Honda, Mitsubishi, BYD) across a deliberately small slice of capabilities
-(configurator, finance calculator, vehicle comparison, dealer locator,
-chatbot, trade-in, test-drive) — enough to prove the pipeline end to end with
-real, interactively-verified evidence, not the full 14-category market
-benchmark. Several rows are marked `Partial`/`?` where a tool was found but
-couldn't be fully clicked through in that session (noted per-row in
-`limitations`). Extend it by running another research pass over more brands
-or more capabilities and ingesting it as a new snapshot — nothing about the
-pipeline changes.
+Three real, interactively-verified snapshots trace how coverage grew:
+`2026-09-24` (4 brands, pilot), `2026-09-24-2` (8 brands), and
+`2026-09-24-3` — the current one — covering all **14** brands: Toyota,
+Honda, Mitsubishi, BYD, Daihatsu, Suzuki, Hyundai, Wuling, Jaecoo, Isuzu,
+Geely, Chery, MG, VinFast. This is a provisional brand list built from
+public research, not the internal DCI report — swap in the exact DCI names
+whenever you have them (see `data/snapshots/2026-09-24-3/evidence.csv`,
+just relabel the `brand` column, no schema change needed).
+
+88 evidence rows across **18 distinct capabilities** and **12 of 14**
+taxonomy categories (`reports/<date>/report.md` names the 2 still untouched:
+OMNICHANNEL and EMERGING EXPERIENCES) — a deliberately wide first pass, not
+the full ~150-capability taxonomy. Some standout, real findings from this
+pass: VinFast has the deepest configurator-to-reservation flow and the only
+fully calculated cost-of-ownership tool in the sample; Isuzu has real fleet
+telematics (Isuzu Link) and a customer-account app (MyIsuzuID) that no other
+brand in this sample has; MG's chat widget is the only one that doesn't
+require a name/phone/email before you can type a message; several brands'
+"finance calculators" turned out to be lead-capture gates rather than actual
+calculators once clicked through. Rows marked `Partial`/`?` are cases where
+a tool was found but couldn't be fully verified in that session, or a site
+actively blocked automated browsing (Cloudflare on one Daihatsu subdomain) —
+each one says why in its `limitations` field. Extend coverage by running
+another research pass over more capabilities (or the exact DCI brand list)
+and ingesting it as a new snapshot — nothing about the pipeline changes.
+
+No single brand is a default "reference" anywhere in the pipeline: the
+`--focus-brand` CLI flag only adds an extra narrative section to the written
+`report.md` when you ask for it, and the `dashboard.html` lets the viewer pick
+*any* brand from a dropdown to see its positioning — every brand's leads/gaps
+are precomputed, and none is selected by default.
 
 ## How a research pass flows through the system
 

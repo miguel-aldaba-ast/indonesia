@@ -73,6 +73,16 @@ class EvidenceRow:
         except ValueError:
             return None
 
+    def score_kind(self) -> str:
+        """One of: 'numeric', 'unknown' (?), 'na' (N/A, irrelevant), 'blank' (empty)."""
+        if self.maturity_score == "?":
+            return "unknown"
+        if self.maturity_score == "N/A":
+            return "na"
+        if self.maturity_score == "":
+            return "blank"
+        return "numeric"
+
     def is_confirmed(self) -> bool:
         return self.status == "Confirmed"
 

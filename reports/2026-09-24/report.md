@@ -5,41 +5,21 @@ Brands covered: BYD, Honda, Mitsubishi, Toyota
 Evidence rows: 22
 
 
-Score key: 0=not found, 1=informational, 2=interactive/calculated, 3=integrated into next step, 4=completed/tracked, ?=unverified, ★=independently evidenced advanced depth, –=not evaluated.
+Framework coverage: 7 of 14 taxonomy categories have at least one researched capability so far.
+Not yet researched: EXPLORE, OWNERSHIP & AFTERSALES, CONNECTED VEHICLE, ELECTRIFICATION, PERSONALISATION & RETENTION, OMNICHANNEL, EMERGING EXPERIENCES.
 
 
-## Competitive positioning: Mitsubishi
+Score key:
 
-Benchmarked against: BYD, Honda, Toyota.
-
-
-### Standing in this sample
-
-- Confirmed capabilities: 3 — rank 3 of 4 brands by count (Honda: 4, Toyota: 4, Mitsubishi: 3, BYD: 2)
-- Average maturity score (evaluated capabilities only): 1.2 — rank 3 of 4
-
-### Average maturity score by category
-
-| Category | Mitsubishi | BYD | Honda | Toyota |
-|---|---|---|---|---|
-| DISCOVER | 2.0 | 0.0 | 2.0 | n/a |
-| CONFIGURE | 0.0 | 3.0 | 2.0 | 2.0 |
-| PRICE & FINANCE | n/a | 0.0 | 2.0 | 3.0 |
-| CONVERT | n/a | 1.0 | n/a | n/a |
-| DEALER & INVENTORY | 2.0 | n/a | n/a | 2.0 |
-| TRADE-IN & USED VEHICLES | n/a | n/a | n/a | 1.0 |
-| CUSTOMER ASSISTANCE | 1.0 | 1.0 | 1.0 | 1.0 |
-
-### Priority gaps vs competitors (4 total)
-
-- **Finance calculator** (PRICE & FINANCE): Toyota scores 3, Mitsubishi is at not confirmed
-- **Model configurator** (CONFIGURE): BYD scores 3, Mitsubishi is at 0
-- **Test-drive booking** (CONVERT): BYD scores 1, Mitsubishi is at not confirmed
-- **Trade-in information** (TRADE-IN & USED VEHICLES): Toyota scores 1, Mitsubishi is at not confirmed
-
-### Depth gaps (competitor evidenced as ★ advanced, Mitsubishi is not)
-
-- **Model configurator** (CONFIGURE): BYD
+- `0` not found — searched, confirmed absent
+- `1` informational / outbound contact only
+- `2` interactive tool with an observed result
+- `3` result carried into a next step (dealer, finance, account, order)
+- `4` completed and tracked outcome
+- `?` unknown — could not be verified
+- `N/A` not applicable to this brand (e.g. no EV in lineup)
+- `–` not yet researched for this brand
+- `★` independently evidenced advanced functional depth
 
 
 ## Coverage by brand

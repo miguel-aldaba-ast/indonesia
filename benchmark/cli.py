@@ -112,6 +112,13 @@ def cmd_report(args: argparse.Namespace) -> int:
             print(f"WARNING: focus brand {args.focus_brand!r} not found in this snapshot's brands "
                   f"({', '.join(matrix['brands'])}) — skipping positioning section.")
 
+    # The HTML dashboard lets the viewer pick ANY brand to see positioning for (no default
+    # focus brand) — precompute every brand's positioning so the switcher is instant client-side.
+    all_positioning = {
+        brand: positioning_mod.build_positioning(matrix, brand)
+        for brand in matrix["brands"]
+    }
+
     out_dir = REPORTS_DIR / snapshot.id
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -119,7 +126,8 @@ def cmd_report(args: argparse.Namespace) -> int:
                                  previous_id=previous_id, positioning=pos)
     (out_dir / "report.md").write_text(md, encoding="utf-8")
 
-    html_out = report_mod.to_html(snapshot.id, rows, matrix, novelty, previous_id=previous_id, positioning=pos)
+    html_out = report_mod.to_html(snapshot.id, rows, matrix, novelty, previous_id=previous_id,
+                                   all_positioning=all_positioning)
     (out_dir / "dashboard.html").write_text(html_out, encoding="utf-8")
 
     n_urls = urls_mod.export_urls(rows, out_dir / "urls.csv")
