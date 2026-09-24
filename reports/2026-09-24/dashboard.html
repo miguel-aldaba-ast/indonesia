@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Indonesia Automotive Digital Benchmark — 2026-09-24</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1d21; --muted: #6b7280; --border: #e5e7eb;
+    --s0: #f3f4f6; --s1: #dbeafe; --s2: #93c5fd; --s3: #3b82f6; --s4: #1d4ed8;
+    --unknown: #fde68a; --na: #f9fafb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#15171a; --fg:#e5e7eb; --muted:#9ca3af; --border:#2b2f36;
+      --s0:#23262b; --s1:#1e3a5f; --s2:#2f5c9c; --s3:#3b82f6; --s4:#60a5fa;
+      --unknown:#6b5b1e; --na:#1c1e22; }
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 14px/1.5 -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; padding: 24px 16px 64px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .meta { color: var(--muted); margin-bottom: 20px; font-size: 13px; }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  select, input[type=text] { background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { cursor: pointer; position: sticky; top: 0; background: var(--bg); user-select: none; }
+  th.sorted::after { content: " \2195"; color: var(--muted); }
+  td.score { text-align: center; font-weight: 600; width: 44px; }
+  .score-0 { background: var(--s0); }
+  .score-1 { background: var(--s1); }
+  .score-2 { background: var(--s2); }
+  .score-3 { background: var(--s3); color: #fff; }
+  .score-4 { background: var(--s4); color: #fff; }
+  .unknown { background: var(--unknown); }
+  .na { background: var(--na); color: var(--muted); }
+  .star { color: #b45309; }
+  .desc { color: var(--muted); max-width: 360px; }
+  a { color: inherit; }
+  .legend { display:flex; gap:14px; flex-wrap:wrap; margin: 10px 0 18px; font-size: 12px; color: var(--muted); align-items:center; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:4px; vertical-align:-1px; }
+  .muted { color: var(--muted); }
+  .positioning { border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
+  .positioning h2 { margin-top: 0; font-size: 17px; }
+  .positioning h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .02em; color: var(--muted); margin: 16px 0 6px; }
+  .positioning ul { margin: 4px 0; padding-left: 20px; }
+  .positioning li { margin: 3px 0; }
+  .posTable { width: auto; min-width: 50%; }
+  .posCols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 700px) { .posCols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>Indonesia Automotive Digital Benchmark — 2026-09-24</h1>
+<div class="meta" id="meta"></div>
+
+<section class="positioning">
+  <h2>Competitive positioning: Mitsubishi</h2>
+  <p class="muted">Benchmarked against: BYD, Honda, Toyota.</p>
+  <ul>
+    <li>Confirmed capabilities: 3 — rank 3 of
+        4 brands by count (Honda: 4, Toyota: 4, Mitsubishi: 3, BYD: 2)</li>
+    <li>Average maturity score (evaluated capabilities only): 1.2 — rank 3 of 4</li>
+  </ul>
+  <h3>Average maturity score by category</h3>
+  <table class="posTable"><thead><tr><th>Category</th><th>Mitsubishi</th><th>BYD</th><th>Honda</th><th>Toyota</th></tr></thead>
+    <tbody><tr><td>DISCOVER</td><td>2.0</td><td>0.0</td><td>2.0</td><td>n/a</td></tr><tr><td>CONFIGURE</td><td>0.0</td><td>3.0</td><td>2.0</td><td>2.0</td></tr><tr><td>PRICE &amp; FINANCE</td><td>n/a</td><td>0.0</td><td>2.0</td><td>3.0</td></tr><tr><td>CONVERT</td><td>n/a</td><td>1.0</td><td>n/a</td><td>n/a</td></tr><tr><td>DEALER &amp; INVENTORY</td><td>2.0</td><td>n/a</td><td>n/a</td><td>2.0</td></tr><tr><td>TRADE-IN &amp; USED VEHICLES</td><td>n/a</td><td>n/a</td><td>n/a</td><td>1.0</td></tr><tr><td>CUSTOMER ASSISTANCE</td><td>1.0</td><td>1.0</td><td>1.0</td><td>1.0</td></tr></tbody></table>
+  <div class="posCols">
+    <div><h3>Where Mitsubishi leads (0)</h3><ul><li class='muted'>None found</li></ul></div>
+    <div><h3>Priority gaps vs competitors (4)</h3><ul><li><b>Finance calculator</b> <span class='muted'>(PRICE &amp; FINANCE)</span>: Toyota scores 3, Mitsubishi is at not confirmed</li><li><b>Model configurator</b> <span class='muted'>(CONFIGURE)</span>: BYD scores 3, Mitsubishi is at 0</li><li><b>Test-drive booking</b> <span class='muted'>(CONVERT)</span>: BYD scores 1, Mitsubishi is at not confirmed</li><li><b>Trade-in information</b> <span class='muted'>(TRADE-IN &amp; USED VEHICLES)</span>: Toyota scores 1, Mitsubishi is at not confirmed</li></ul></div>
+  </div>
+  <h3>Depth gaps (competitor evidenced as ★ advanced, Mitsubishi is not)</h3><ul><li><b>Model configurator</b> (CONFIGURE): BYD</li></ul>
+</section>
+
+<div class="legend">
+  <span><span class="swatch score-0"></span>0 not found</span>
+  <span><span class="swatch score-1"></span>1 informational</span>
+  <span><span class="swatch score-2"></span>2 interactive/calculated</span>
+  <span><span class="swatch score-3"></span>3 integrated into next step</span>
+  <span><span class="swatch score-4"></span>4 completed/tracked</span>
+  <span><span class="swatch unknown"></span>? unverified</span>
+  <span><span class="swatch na"></span>– not evaluated</span>
+  <span class="star">★ advanced</span>
+</div>
+<div class="controls">
+  <input type="text" id="q" placeholder="Filter capability or brand...">
+  <select id="brandFilter"><option value="">All brands</option></select>
+  <select id="categoryFilter"><option value="">All categories</option></select>
+  <select id="statusFilter">
+    <option value="">All statuses</option>
+    <option>Confirmed</option><option>Partial</option>
+    <option>Not found</option><option>Unknown</option><option>Not evaluated</option>
+  </select>
+</div>
+<table id="tbl">
+  <thead><tr>
+    <th data-k="category">Category</th>
+    <th data-k="capability">Capability</th>
+    <th data-k="brand">Brand</th>
+    <th data-k="score_label">Score</th>
+    <th data-k="status">Status</th>
+    <th data-k="description">Description</th>
+    <th>Evidence</th>
+  </tr></thead>
+  <tbody></tbody>
+</table>
+
+<script id="data" type="application/json">{"snapshot": "2026-09-24", "previous": null, "brands": ["BYD", "Honda", "Mitsubishi", "Toyota"], "rows": [{"category": "DISCOVER", "capability": "Vehicle comparison", "brand": "BYD", "status": "Not found", "score_class": "score-0", "score_label": "0", "advanced": false, "description": "No vehicle comparison tool was found.", "value": "", "url": "https://www.byd.com/id", "confidence": "Medium"}, {"category": "DISCOVER", "capability": "Vehicle comparison", "brand": "Honda", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Customer can add up to 3 Honda models with model/variant dropdowns to compare.", "value": "Lets a shopper narrow a shortlist without leaving the Honda site.", "url": "https://www.honda-indonesia.com/compare", "confidence": "Medium"}, {"category": "DISCOVER", "capability": "Vehicle comparison", "brand": "Mitsubishi", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Customer chooses a comparison method (\"Pemilihan Unit\" or \"Rentang Harga\") then selects up to 3 vehicles to compare.", "value": "Offers two ways to start a comparison (by specific models or by price band) rather than one fixed format.", "url": "https://www.mitsubishi-motors.co.id/car-comparison?method=unit", "confidence": "Medium"}, {"category": "DISCOVER", "capability": "Vehicle comparison", "brand": "Toyota", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "CONFIGURE", "capability": "Model configurator", "brand": "BYD", "status": "Confirmed", "score_class": "score-3", "score_label": "3", "advanced": true, "description": "Customer picks a variant, exterior colour, interior and wheels with a live-updating render and price, then the exact configuration is carried into a lead-capture step via a persistent save-configuration URL.", "value": "Configuration is demonstrably carried forward into the sales process rather than just displayed.", "url": "https://www.byd.com/id/order-seal", "confidence": "High"}, {"category": "CONFIGURE", "capability": "Model configurator", "brand": "Honda", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "The same credit-simulation wizard doubles as a configurator: model, variant, colour, maintenance package and accessories are each individually priced.", "value": "Customer can see the effect of each choice on price even if they only want to browse configurations.", "url": "https://www.honda-indonesia.com/credit-simulation", "confidence": "Medium"}, {"category": "CONFIGURE", "capability": "Model configurator", "brand": "Mitsubishi", "status": "Not found", "score_class": "score-0", "score_label": "0", "advanced": false, "description": "No standalone vehicle configurator (colour/trim/accessories builder) was found.", "value": "", "url": "https://www.mitsubishi-motors.co.id/", "confidence": "Medium"}, {"category": "CONFIGURE", "capability": "Model configurator", "brand": "Toyota", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Customer selects model body-style, then variant and exterior colour, and sees live per-variant OTR pricing.", "value": "Lets the customer narrow down a specific variant/colour and see its price before any dealer contact.", "url": "https://www.toyota.astra.co.id/shopping-tools/financial-simulation", "confidence": "High"}, {"category": "PRICE & FINANCE", "capability": "Finance calculator", "brand": "BYD", "status": "Not found", "score_class": "score-0", "score_label": "0", "advanced": false, "description": "No interactive on-site financing/instalment calculator was found.", "value": "", "url": "https://www.byd.com/id", "confidence": "Medium"}, {"category": "PRICE & FINANCE", "capability": "Finance calculator", "brand": "Honda", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Customer picks model, variant, colour, an optional maintenance package and optional accessories, then enters a DP% and gets a calculated instalment breakdown on-screen.", "value": "Gives a real calculated financing breakdown without submitting any personal contact info first.", "url": "https://www.honda-indonesia.com/credit-simulation", "confidence": "High"}, {"category": "PRICE & FINANCE", "capability": "Finance calculator", "brand": "Mitsubishi", "status": "Partial", "score_class": "unknown", "score_label": "?", "advanced": false, "description": "A vehicle-selection carousel with live starting OTR price per model opens from the Simulasi Kredit page.", "value": "Lets a shopper see starting prices for every model from one financing-intent entry point.", "url": "https://www.mitsubishi-motors.co.id/simulasi-kredit", "confidence": "Low"}, {"category": "PRICE & FINANCE", "capability": "Finance calculator", "brand": "Toyota", "status": "Confirmed", "score_class": "score-3", "score_label": "3", "advanced": false, "description": "Customer configures a vehicle, must select a dealer, and sets down-payment %, insurance coverage and package type before the calculator can run.", "value": "Ties a financing estimate to a specific configuration and a specific dealer in one flow, not a generic estimate.", "url": "https://www.toyota.astra.co.id/shopping-tools/financial-simulation/simulation-detail", "confidence": "Medium"}, {"category": "CONVERT", "capability": "Test-drive booking", "brand": "BYD", "status": "Partial", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "A per-model \"Uji Kendaraan\" (test drive) button links to a dedicated test-drive portal.", "value": "", "url": "https://www.byd.com/id/test-asia-driver", "confidence": "Low"}, {"category": "CONVERT", "capability": "Test-drive booking", "brand": "Honda", "status": "Partial", "score_class": "unknown", "score_label": "?", "advanced": false, "description": "A dedicated test-drive booking page exists in the Shopping Tools menu.", "value": "", "url": "https://www.honda-indonesia.com/book-now", "confidence": "Low"}, {"category": "CONVERT", "capability": "Test-drive booking", "brand": "Mitsubishi", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "CONVERT", "capability": "Test-drive booking", "brand": "Toyota", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "DEALER & INVENTORY", "capability": "Dealer locator", "brand": "BYD", "status": "Partial", "score_class": "unknown", "score_label": "?", "advanced": false, "description": "A \"Temukan Kami\" (find us) dealer locator page exists in the main navigation.", "value": "", "url": "https://www.byd.com/id/find-store", "confidence": "Low"}, {"category": "DEALER & INVENTORY", "capability": "Dealer locator", "brand": "Honda", "status": "Partial", "score_class": "unknown", "score_label": "?", "advanced": false, "description": "A dedicated Dealer page exists in the Shopping Tools menu.", "value": "", "url": "https://www.honda-indonesia.com/dealers", "confidence": "Low"}, {"category": "DEALER & INVENTORY", "capability": "Dealer locator", "brand": "Mitsubishi", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Map-based dealer locator with visible dealer pins on load.", "value": "Gives an immediate visual of dealer coverage without extra steps.", "url": "https://www.mitsubishi-motors.co.id/cari-dealer", "confidence": "Medium"}, {"category": "DEALER & INVENTORY", "capability": "Dealer locator", "brand": "Toyota", "status": "Confirmed", "score_class": "score-2", "score_label": "2", "advanced": false, "description": "Map-based dealer picker with a city search box and Test Drive / Trade-In filter chips, reached from inside the finance flow.", "value": "Lets the customer narrow dealers by the specific service they want (test drive vs trade-in) rather than a flat list.", "url": "https://www.toyota.astra.co.id/shopping-tools/financial-simulation/simulation-detail", "confidence": "Medium"}, {"category": "TRADE-IN & USED VEHICLES", "capability": "Trade-in information", "brand": "BYD", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "TRADE-IN & USED VEHICLES", "capability": "Trade-in information", "brand": "Honda", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "TRADE-IN & USED VEHICLES", "capability": "Trade-in information", "brand": "Mitsubishi", "status": "Not evaluated", "score_class": "na", "score_label": "\u2013", "advanced": false, "description": "", "value": "", "url": "", "confidence": ""}, {"category": "TRADE-IN & USED VEHICLES", "capability": "Trade-in information", "brand": "Toyota", "status": "Partial", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "A \"trade in my car for a new one\" toggle appears inside the finance flow.", "value": "Signals trade-in is possible as part of financing a new purchase.", "url": "https://www.toyota.astra.co.id/shopping-tools/financial-simulation/simulation-detail", "confidence": "Low"}, {"category": "CUSTOMER ASSISTANCE", "capability": "Chatbot", "brand": "BYD", "status": "Confirmed", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "A floating \"Let's Connect!\" button opens WhatsApp directly via api.whatsapp.com, no on-site chat widget.", "value": "Fastest path to a human but offers no on-site self-service assistance.", "url": "https://www.byd.com/id/car/seal", "confidence": "High"}, {"category": "CUSTOMER ASSISTANCE", "capability": "Chatbot", "brand": "Honda", "status": "Confirmed", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "\"Hani\" widget triggers an explicit third-party redirect warning before opening.", "value": "Indicates the assistant is an outsourced/third-party widget rather than a native site feature.", "url": "https://www.honda-indonesia.com/", "confidence": "Medium"}, {"category": "CUSTOMER ASSISTANCE", "capability": "Chatbot", "brand": "Mitsubishi", "status": "Confirmed", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "\"MIRA\" virtual assistant requires name, email and phone number before chat begins.", "value": "Routes visitors into a lead rather than answering questions directly, the same pattern as Toyota and Honda.", "url": "https://www.mitsubishi-motors.co.id/", "confidence": "High"}, {"category": "CUSTOMER ASSISTANCE", "capability": "Chatbot", "brand": "Toyota", "status": "Confirmed", "score_class": "score-1", "score_label": "1", "advanced": false, "description": "\"Ask TARRA\" widget requires name, phone and email before any chat message can be sent.", "value": "Routes a visitor into a contactable lead rather than answering questions directly.", "url": "https://www.toyota.astra.co.id/", "confidence": "High"}], "novelty": [{"category": "DISCOVER", "capability": "Vehicle comparison", "confirmed_brands": ["Honda", "Mitsubishi"], "confirmed_count": 2, "sample_size": 4, "novelty": "Developing", "advanced_brands": []}, {"category": "CONFIGURE", "capability": "Model configurator", "confirmed_brands": ["BYD", "Honda", "Toyota"], "confirmed_count": 3, "sample_size": 4, "novelty": "Table Stakes", "advanced_brands": ["BYD"]}, {"category": "PRICE & FINANCE", "capability": "Finance calculator", "confirmed_brands": ["Honda", "Toyota"], "confirmed_count": 2, "sample_size": 4, "novelty": "Developing", "advanced_brands": []}, {"category": "CONVERT", "capability": "Test-drive booking", "confirmed_brands": [], "confirmed_count": 0, "sample_size": 4, "novelty": "Distinctive", "advanced_brands": []}, {"category": "DEALER & INVENTORY", "capability": "Dealer locator", "confirmed_brands": ["Mitsubishi", "Toyota"], "confirmed_count": 2, "sample_size": 4, "novelty": "Developing", "advanced_brands": []}, {"category": "TRADE-IN & USED VEHICLES", "capability": "Trade-in information", "confirmed_brands": [], "confirmed_count": 0, "sample_size": 4, "novelty": "Distinctive", "advanced_brands": []}, {"category": "CUSTOMER ASSISTANCE", "capability": "Chatbot", "confirmed_brands": ["BYD", "Honda", "Mitsubishi", "Toyota"], "confirmed_count": 4, "sample_size": 4, "novelty": "Table Stakes", "advanced_brands": []}]}</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById('data').textContent);
+  var rows = data.rows;
+  document.getElementById('meta').textContent =
+    'Snapshot ' + data.snapshot + (data.previous ? ' (previous: ' + data.previous + ')' : '') +
+    ' — ' + data.brands.length + ' brands, ' + rows.length + ' evidence cells';
+
+  var brandSel = document.getElementById('brandFilter');
+  var catSel = document.getElementById('categoryFilter');
+  Array.from(new Set(rows.map(function(r){return r.brand;}))).sort().forEach(function(b){
+    var o = document.createElement('option'); o.textContent = b; brandSel.appendChild(o);
+  });
+  Array.from(new Set(rows.map(function(r){return r.category;}))).forEach(function(c){
+    var o = document.createElement('option'); o.textContent = c; catSel.appendChild(o);
+  });
+
+  var sortKey = 'category', sortDir = 1;
+  var tbody = document.querySelector('#tbl tbody');
+  var q = document.getElementById('q');
+  var statusSel = document.getElementById('statusFilter');
+
+  function esc(s) {
+    var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML;
+  }
+
+  function render() {
+    var query = q.value.toLowerCase();
+    var brand = brandSel.value, cat = catSel.value, status = statusSel.value;
+    var filtered = rows.filter(function (r) {
+      if (brand && r.brand !== brand) return false;
+      if (cat && r.category !== cat) return false;
+      if (status && r.status !== status) return false;
+      if (query && (r.capability + ' ' + r.brand + ' ' + r.description).toLowerCase().indexOf(query) === -1) return false;
+      return true;
+    });
+    filtered.sort(function (a, b) {
+      var av = a[sortKey], bv = b[sortKey];
+      return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    });
+    tbody.innerHTML = filtered.map(function (r) {
+      var evidence = r.url ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">source</a>' : '';
+      var star = r.advanced ? ' <span class="star">★</span>' : '';
+      return '<tr>' +
+        '<td>' + esc(r.category) + '</td>' +
+        '<td>' + esc(r.capability) + '</td>' +
+        '<td>' + esc(r.brand) + '</td>' +
+        '<td class="score ' + r.score_class + '">' + esc(r.score_label) + star + '</td>' +
+        '<td>' + esc(r.status) + '</td>' +
+        '<td class="desc">' + esc(r.description) + '</td>' +
+        '<td>' + evidence + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  document.querySelectorAll('th[data-k]').forEach(function (th) {
+    th.addEventListener('click', function () {
+      var k = th.getAttribute('data-k');
+      if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = 1; }
+      document.querySelectorAll('th').forEach(function(t){t.classList.remove('sorted');});
+      th.classList.add('sorted');
+      render();
+    });
+  });
+  [q, brandSel, catSel, statusSel].forEach(function (el) {
+    el.addEventListener('input', render);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

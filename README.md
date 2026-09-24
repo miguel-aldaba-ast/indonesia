@@ -20,18 +20,40 @@ changed, and exporting a deduped URL list for pasting into your analytics/
 tracking systems (this tool has no access to traffic or conversion data —
 that hand-off is intentional).
 
+## Current status
+
+`data/snapshots/2026-09-24/` is a real first pass covering 4 brands (Toyota,
+Honda, Mitsubishi, BYD) across a deliberately small slice of capabilities
+(configurator, finance calculator, vehicle comparison, dealer locator,
+chatbot, trade-in, test-drive) — enough to prove the pipeline end to end with
+real, interactively-verified evidence, not the full 14-category market
+benchmark. Several rows are marked `Partial`/`?` where a tool was found but
+couldn't be fully clicked through in that session (noted per-row in
+`limitations`). Extend it by running another research pass over more brands
+or more capabilities and ingesting it as a new snapshot — nothing about the
+pipeline changes.
+
 ## How a research pass flows through the system
 
-1. **Research.** Run the `indonesia-auto-benchmark` skill (in Claude or
-   Codex) against this month's brand list. Ask it to output its evidence
-   table using the exact columns in `data/evidence_template.csv` — the skill
-   already tracks all of these fields internally, so this is just an export
-   format, not extra work for it.
-2. **Fill / save the CSV.** Save that table as a CSV (e.g. `sept_2026.csv`),
-   using `data/evidence_template.csv` as the header reference.
+1. **Research.** Someone (or something) with a real browser goes and looks at
+   the brand websites and fills in the evidence CSV. Three ways to do this:
+   - **Ask Claude Code, in this repo, to do it** — it can browse interactively
+     (this is how the `2026-09-24` snapshot in this repo was produced).
+   - **Run the `indonesia-auto-benchmark` skill in Codex CLI** — it auto-loads
+     from `.codex-plugin/plugin.json` in this repo; ask it to output its
+     evidence table using the columns in `data/evidence_template.csv`.
+   - **Use the Custom GPT** in `chatgpt-gpt/` — for colleagues without
+     Python/terminal access. See `chatgpt-gpt/README.md` to set it up in
+     chatgpt.com. It only produces the CSV; a human still runs steps 3–4
+     below locally.
+2. **Save the CSV.** Save the finished table as a CSV file somewhere on disk
+   (e.g. `oct_2026.csv`), using `data/evidence_template.csv` as the header
+   reference. This file does not need to exist yet, and does not live in this
+   repo until you ingest it in the next step — it's just wherever you saved
+   your research output.
 3. **Ingest it as a snapshot.**
    ```
-   python3 -m benchmark ingest sept_2026.csv --date 2026-09-24
+   python3 -m benchmark ingest oct_2026.csv --date 2026-10-15
    ```
    This validates the data (blocking errors on malformed status/score values
    or duplicate brand+capability rows; non-blocking warnings for things like
@@ -115,6 +137,7 @@ reports/<date>/
   urls.csv
   diff_from_previous.md     only when a prior snapshot exists
 indonesia-automotive-digital-benchmark (1)/   the research skill (unmodified)
+chatgpt-gpt/                 Custom GPT setup: instructions.md, csv-output-format.md, README.md
 ```
 
 ## Notes / known limits
