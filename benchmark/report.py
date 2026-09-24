@@ -339,6 +339,7 @@ _HTML_TEMPLATE = """<!doctype html>
     --unknown: #f3dfae; --unknown-fg: #6b5321;
     --na: #ece8f2; --na-fg: #726b85;
     --blank: transparent; --blank-fg: #c7c2ba;
+    --hl: #c62828;
     --shadow: 0 1px 2px rgba(40,35,25,.04), 0 6px 20px rgba(40,35,25,.05);
     --radius: 14px;
   }
@@ -354,6 +355,7 @@ _HTML_TEMPLATE = """<!doctype html>
       --unknown: #4a3d1e; --unknown-fg: #e8cf8e;
       --na: #2a2733; --na-fg: #b6adc9;
       --blank: transparent; --blank-fg: #45423d;
+      --hl: #ef5350;
       --shadow: 0 1px 2px rgba(0,0,0,.2), 0 8px 24px rgba(0,0,0,.28);
     }
   }
@@ -422,6 +424,8 @@ _HTML_TEMPLATE = """<!doctype html>
   .cell-unknown .cellchip { background: var(--unknown); color: var(--unknown-fg); }
   .cell-na .cellchip { background: var(--na); color: var(--na-fg); font-size: 10px; }
   .cell-blank .cellchip { background: var(--blank); color: var(--blank-fg); border: 1px dashed var(--border); }
+  table.heat th.hl-col-header { color: var(--hl); font-weight: 700; }
+  table.heat td.score.hl-col { border-top: 1.5px solid var(--hl); border-bottom: 1.5px solid var(--hl); box-shadow: inset 1.5px 0 0 var(--hl), inset -1.5px 0 0 var(--hl); }
 
   details.catgroup { margin-bottom: 10px; }
   details.catgroup > summary {
@@ -483,6 +487,7 @@ _HTML_TEMPLATE = """<!doctype html>
     <span><span class="swatch" style="background:var(--na)"></span>N/A not applicable</span>
     <span><span class="swatch" style="border-style:dashed"></span>– not yet researched</span>
     <span class="star">★ advanced</span>
+    <span><span class="swatch" style="border: 1.5px solid var(--hl); background: transparent;"></span>Mitsubishi (client)</span>
   </div>
   <div id="heatgroups"></div>
 </div>
@@ -520,6 +525,9 @@ _HTML_TEMPLATE = """<!doctype html>
 (function () {
   var data = JSON.parse(document.getElementById('data').textContent);
   var rows = data.rows;
+  // Client brand: gets a red column highlight in the heatmap so it's easy to spot among many
+  // brand columns. Purely visual -- does not affect the neutral positioning switcher above.
+  var HIGHLIGHT_BRAND = 'Mitsubishi';
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   function fmtScore(v) { return (v === null || v === undefined) ? 'n/a' : v.toFixed(1); }
@@ -632,11 +640,15 @@ _HTML_TEMPLATE = """<!doctype html>
         var label = r ? r.score_label : '–';
         var star = (r && r.advanced) ? '<span class="star">★</span>' : '';
         var title = r ? (r.brand + ' — ' + r.status + (r.description ? ': ' + r.description : '')) : (b + ' — not yet researched');
-        return '<td class="score ' + cls + '" title="' + esc(title) + '"><span class="cellchip">' + esc(label) + '</span>' + star + '</td>';
+        var hl = (b === HIGHLIGHT_BRAND) ? ' hl-col' : '';
+        return '<td class="score ' + cls + hl + '" title="' + esc(title) + '"><span class="cellchip">' + esc(label) + '</span>' + star + '</td>';
       }).join('');
       return '<tr><td class="cap">' + esc(cap) + '</td>' + cells + '</tr>';
     }).join('');
-    var header = '<tr><th></th>' + data.brands.map(function (b) { return '<th>' + esc(b) + '</th>'; }).join('') + '</tr>';
+    var header = '<tr><th></th>' + data.brands.map(function (b) {
+      var hl = (b === HIGHLIGHT_BRAND) ? ' hl-col-header' : '';
+      return '<th class="' + hl.trim() + '">' + esc(b) + '</th>';
+    }).join('') + '</tr>';
     return '<details class="catgroup" open><summary>' + esc(cat) + ' <span class="count">(' + caps.length + ')</span></summary>' +
       '<div class="heatwrap"><table class="heat">' + header + bodyRows + '</table></div></details>';
   }).join('');
