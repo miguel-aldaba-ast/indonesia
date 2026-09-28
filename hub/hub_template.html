@@ -1,0 +1,920 @@
+<title>Benchmark Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #f4f6f3; --panel: #ffffff; --fg: #1b2320; --muted: #5d6a63; --border: #dde4de; --border-soft: #eaeee9;
+    --accent: #2a6a5d; --accent-fg: #ffffff; --accent-soft: #e0eee9; --accent-line: #b9d6cc;
+    --s0: #eaede9; --s0-fg: #75807a; --s1: #d3e9de; --s1-fg: #23493c; --s2: #a2d2c0; --s2-fg: #173a2f;
+    --s3: #4e9e8a; --s3-fg: #ffffff; --s4: #24665a; --s4-fg: #ffffff;
+    --unknown: #f3e1af; --unknown-fg: #664e15; --na: #e7e4f0; --na-fg: #6a647f;
+    --todo-line: #c4ccc5; --queued: #3a6ea6; --queued-soft: #e0ebf7; --danger: #b1392f; --danger-soft: #f8e4e1;
+    --star: #b0812f; --shadow: 0 1px 2px rgba(25,35,30,.05), 0 6px 22px rgba(25,35,30,.06);
+    --radius: 14px;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #131917; --panel: #1b2320; --fg: #e6ebe7; --muted: #98a59d; --border: #2a3531; --border-soft: #222c28;
+      --accent: #7dbdad; --accent-fg: #0d1a16; --accent-soft: #1e2f2a; --accent-line: #2f4a42;
+      --s0: #222a27; --s0-fg: #86928b; --s1: #1f3a31; --s1-fg: #a2dcc9; --s2: #26493d; --s2-fg: #c1ebda;
+      --s3: #3f8b77; --s3-fg: #ffffff; --s4: #59b39e; --s4-fg: #0b1814;
+      --unknown: #4a3d1e; --unknown-fg: #ead28f; --na: #2a2733; --na-fg: #b7aeca;
+      --todo-line: #3b4742; --queued: #78a8dd; --queued-soft: #1d2b3b; --danger: #ef6b60; --danger-soft: #3a2220;
+      --star: #d6a54f; --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 26px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #131917; --panel: #1b2320; --fg: #e6ebe7; --muted: #98a59d; --border: #2a3531; --border-soft: #222c28;
+    --accent: #7dbdad; --accent-fg: #0d1a16; --accent-soft: #1e2f2a; --accent-line: #2f4a42;
+    --s0: #222a27; --s0-fg: #86928b; --s1: #1f3a31; --s1-fg: #a2dcc9; --s2: #26493d; --s2-fg: #c1ebda;
+    --s3: #3f8b77; --s3-fg: #ffffff; --s4: #59b39e; --s4-fg: #0b1814;
+    --unknown: #4a3d1e; --unknown-fg: #ead28f; --na: #2a2733; --na-fg: #b7aeca;
+    --todo-line: #3b4742; --queued: #78a8dd; --queued-soft: #1d2b3b; --danger: #ef6b60; --danger-soft: #3a2220;
+    --star: #d6a54f; --shadow: 0 1px 2px rgba(0,0,0,.25), 0 8px 26px rgba(0,0,0,.3);
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  body { color: var(--fg); font: 14px/1.55 var(--sans); padding-inline: 20px; padding-block: 0 72px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  h2 { font-size: 17px; font-weight: 650; letter-spacing: -.005em; }
+  h3 { font-size: 12px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  p { margin: 0; }
+  .muted { color: var(--muted); }
+  .num { font-variant-numeric: tabular-nums; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 1240px; margin-inline: auto; }
+  .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--border);
+    margin-inline: -20px; padding: 12px 20px; }
+  .topin { max-width: 1240px; margin-inline: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
+  .mark { font-weight: 700; font-size: 16px; letter-spacing: -.01em; display: flex; flex-direction: column; line-height: 1.2; }
+  .mark small { font-weight: 400; font-size: 11.5px; color: var(--muted); }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tab { background: none; border: 1px solid transparent; border-radius: 9px; padding: 7px 13px; cursor: pointer; font-weight: 550; color: var(--muted); }
+  .tab:hover { color: var(--fg); background: var(--border-soft); }
+  .tab[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+  .country { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .country label { font-size: 12px; color: var(--muted); }
+  select, input[type=text], input[type=url], textarea {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 9px; padding: 8px 11px; min-width: 0;
+  }
+  select:focus, input:focus, textarea:focus { border-color: var(--accent); outline: none; }
+  textarea { width: 100%; resize: vertical; }
+
+  .btn { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg); border-radius: 9px; padding: 8px 14px; font-weight: 600; cursor: pointer; }
+  .btn:hover { filter: brightness(1.06); }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn.ghost:hover { background: var(--accent-soft); filter: none; }
+  .btn.small { padding: 5px 10px; font-size: 12.5px; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+
+  .notice { margin-top: 14px; border-radius: 12px; padding: 11px 14px; background: var(--unknown); color: var(--unknown-fg); font-size: 13.5px; }
+  .card { background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px; }
+  .stack { display: flex; flex-direction: column; gap: 18px; padding-top: 20px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+  .cardhead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 14px; }
+  .lede { color: var(--muted); max-width: 70ch; }
+  .field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+  .field input, .field select { font-size: 14px; color: var(--fg); }
+
+  /* stats */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .stat { background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+  .stat b { display: block; font-size: 25px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; }
+  .stat span { font-size: 12.5px; color: var(--muted); }
+  .bar { height: 6px; border-radius: 99px; background: var(--s0); margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+
+  /* board */
+  .boardwrap { overflow: auto; max-height: 72vh; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--panel); }
+  table.board { border-collapse: separate; border-spacing: 0; font-size: 13px; table-layout: fixed; }
+  table.board th, table.board td { padding: 4px 3px; text-align: center; background: var(--panel); }
+  table.board thead th { position: sticky; top: 0; z-index: 3; }
+  table.board thead tr.caps th { top: 27px; }
+  table.board th.cat { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 650; border-left: 1px solid var(--border-soft); padding: 6px 6px; white-space: nowrap; text-align: left; overflow: hidden; text-overflow: ellipsis; }
+  table.board th.cap { vertical-align: bottom; height: 132px; padding: 6px 2px; font-weight: 500; font-size: 12px; }
+  table.board th.cap span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; display: inline-block; }
+  table.board th.corner { position: sticky; left: 0; z-index: 5; text-align: left; padding-left: 14px; }
+  table.board td.brand { position: sticky; left: 0; z-index: 2; text-align: left; padding: 3px 10px 3px 14px; border-right: 1px solid var(--border-soft); }
+  table.board tr:hover td { background: var(--bg); }
+  .brandbtn { all: unset; cursor: pointer; font-weight: 600; }
+  .brandbtn:hover, .brandbtn:focus-visible { color: var(--accent); text-decoration: underline; }
+  .todo { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; }
+  .cell { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 26px; border-radius: 7px; font-size: 12.5px; font-weight: 650; position: relative; font-variant-numeric: tabular-nums; }
+  .cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .cell:hover { box-shadow: 0 0 0 2px var(--accent-line); }
+  .score-0 { background: var(--s0); color: var(--s0-fg); }
+  .score-1 { background: var(--s1); color: var(--s1-fg); }
+  .score-2 { background: var(--s2); color: var(--s2-fg); }
+  .score-3 { background: var(--s3); color: var(--s3-fg); }
+  .score-4 { background: var(--s4); color: var(--s4-fg); }
+  .cell-unknown { background: var(--unknown); color: var(--unknown-fg); }
+  .cell-na { background: var(--na); color: var(--na-fg); font-size: 10px; }
+  .cell-todo { background: transparent; color: var(--todo-line); border: 1px dashed var(--todo-line); font-weight: 400; }
+  .cell.low::after { content: ""; position: absolute; left: 5px; right: 5px; bottom: 2px; border-bottom: 2px dotted var(--unknown-fg); opacity: .8; }
+  .cell.queued { box-shadow: 0 0 0 2px var(--queued); }
+  .cell .st { position: absolute; top: -4px; right: -3px; font-size: 10px; color: var(--star); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--muted); align-items: center; margin-bottom: 12px; }
+  .legend .cell { width: 20px; height: 18px; font-size: 10px; cursor: default; }
+  .legend .cell:hover { box-shadow: none; }
+
+  .nextgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .next { border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .next b { font-weight: 650; }
+
+  /* steps */
+  .steps { display: grid; gap: 18px; }
+  .stephead { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .stephead .n { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .three { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+  .mini { border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .mini h3 { margin-bottom: 0; }
+  .picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; }
+  .pick { display: flex; align-items: flex-start; gap: 8px; padding: 5px 2px; font-size: 13.5px; cursor: pointer; }
+  .pick input { margin-top: 3px; accent-color: var(--accent); }
+  .pick small { color: var(--muted); display: block; font-size: 11.5px; }
+  .cathead { margin: 12px 0 2px; }
+  details.more { margin-top: 10px; }
+  details.more > summary { cursor: pointer; color: var(--accent); font-weight: 550; }
+  .req { font-family: var(--mono); font-size: 12px; line-height: 1.5; min-height: 180px; max-height: 420px; }
+  .hint { font-size: 12.5px; color: var(--muted); }
+  .ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+
+  table.grid { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.grid th { text-align: left; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 650; padding: 6px 10px; }
+  table.grid td { border-top: 1px solid var(--border-soft); padding: 8px 10px; vertical-align: top; }
+  .scroll { overflow-x: auto; }
+  .pill { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 650; background: var(--s0); color: var(--s0-fg); }
+  .pill.requested { background: var(--queued-soft); color: var(--queued); }
+  .pill.done { background: var(--s2); color: var(--s2-fg); }
+  .pill.High { background: var(--s3); color: var(--s3-fg); } .pill.Medium { background: var(--s2); color: var(--s2-fg); } .pill.Low { background: var(--unknown); color: var(--unknown-fg); }
+  .bad { color: var(--danger); } .okc { color: var(--accent); }
+  .issues { background: var(--danger-soft); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; max-height: 160px; overflow: auto; }
+  .issues ul { margin: 4px 0 0; padding-left: 18px; }
+
+  /* results */
+  .tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+  iframe.dash { width: 100%; height: 78vh; min-height: 520px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--bg); }
+
+  /* drawer */
+  .scrim { position: fixed; inset: 0; background: rgba(15,20,18,.38); opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 40; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(440px, 100%); background: var(--panel); border-left: 1px solid var(--border); box-shadow: var(--shadow); z-index: 50; overflow-y: auto;
+    padding: 22px 22px 40px; transform: translateX(105%); transition: transform .18s ease; }
+  .drawer.open { transform: none; }
+  .drawer .x { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; line-height: 1; }
+  .drawer h2 { margin: 2px 0 12px; }
+  .drawer h3 { margin: 16px 0 4px; }
+  .drawer .verdict { display: flex; gap: 12px; align-items: center; margin-bottom: 4px; }
+  .drawer .verdict .cell { width: 44px; height: 38px; font-size: 18px; cursor: default; border-radius: 10px; }
+  .drawer .cav { background: var(--unknown); color: var(--unknown-fg); border-radius: 10px; padding: 10px 12px; }
+  .drawer dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0; font-size: 12.5px; }
+  .drawer dt { color: var(--muted); } .drawer dd { margin: 0; word-break: break-word; }
+  .empty { padding: 34px 10px; text-align: center; color: var(--muted); }
+  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 13.5px; z-index: 80; max-width: min(92vw, 520px); box-shadow: var(--shadow); }
+  .guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .guide p, .guide li { max-width: 62ch; }
+  .guide ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 5px; }
+  @media (prefers-reduced-motion: reduce) { .drawer, .scrim { transition: none; } }
+</style>
+
+<div class="top"><div class="topin">
+  <div class="mark">Benchmark Hub<small>What car brands let customers do online</small></div>
+  <div class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="t-coverage" data-tab="coverage" aria-selected="true">Coverage</button>
+    <button class="tab" role="tab" id="t-research" data-tab="research" aria-selected="false">Add and research</button>
+    <button class="tab" role="tab" id="t-results" data-tab="results" aria-selected="false">Results</button>
+    <button class="tab" role="tab" id="t-guide" data-tab="guide" aria-selected="false">Guide</button>
+  </div>
+  <div class="country"><label for="countrySel">Country</label><select id="countrySel" aria-label="Country"></select></div>
+</div></div>
+
+<div class="wrap">
+<div class="notice" id="notice" hidden></div>
+
+<!-- COVERAGE -->
+<section id="tab-coverage" class="stack" aria-labelledby="t-coverage">
+  <div class="stats" id="stats"></div>
+  <div class="card">
+    <div class="cardhead"><h2>What has been checked</h2><span class="hint" id="boardHint"></span></div>
+    <div class="legend" id="legend"></div>
+    <div class="boardwrap" id="board"></div>
+  </div>
+  <div class="card">
+    <div class="cardhead"><h2>Where to look next</h2><span class="hint">Brands with the most features still to check</span></div>
+    <div class="nextgrid" id="nextup"></div>
+  </div>
+</section>
+
+<!-- ADD AND RESEARCH -->
+<section id="tab-research" class="stack" aria-labelledby="t-research" hidden>
+  <div class="card">
+    <div class="stephead"><span class="n">1</span><h2>Set up what to compare</h2></div>
+    <p class="lede" style="margin-bottom:14px">Add a country, the brands you want to compare there, and the features to look for. Everyone on the hub sees these straight away.</p>
+    <div class="three">
+      <form class="mini" id="fCountry" autocomplete="off">
+        <h3>New country</h3>
+        <div class="field"><label for="cName">Country name</label><input type="text" id="cName" placeholder="For example Spain" required><span class="hint">Adds an empty country. Then add its brands below.</span></div>
+        <button class="btn needs-write" type="submit">Add country</button>
+      </form>
+      <form class="mini" id="fBrand" autocomplete="off">
+        <h3>New brand</h3>
+        <div class="field"><label for="bName">Brand name</label><input type="text" id="bName" placeholder="For example Nissan" required></div>
+        <div class="field"><label for="bUrl">Brand website in this country (optional)</label><input type="url" id="bUrl" placeholder="https://www.example.com/"><span class="hint">Leave it empty if you do not know it. The research request then asks Claude to find the official site.</span></div>
+        <button class="btn needs-write" type="submit">Add brand to <span id="bCountryName">this country</span></button>
+      </form>
+      <form class="mini" id="fFeature" autocomplete="off">
+        <h3>New feature to track</h3>
+        <div class="field"><label for="fCat">Area of the customer journey</label><select id="fCat"></select><span class="hint">Only used to group the feature on the board. It does not limit where Claude looks.</span></div>
+        <div class="field"><label for="fName">Feature name</label><input type="text" id="fName" placeholder="For example Video consultation" required><span class="hint">A short name for something a customer can do on the site. It applies to every country.</span></div>
+        <div class="field"><label for="fHint">What should the researcher look for? (optional)</label><input type="text" id="fHint" placeholder="For example: can a shopper book a video call with an advisor?"><span class="hint">One plain sentence that tells Claude what counts. It is copied into every research request. If empty, Claude works from the feature name.</span></div>
+        <button class="btn needs-write" type="submit">Track this feature</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stephead"><span class="n">2</span><h2>Ask Claude to research</h2></div>
+    <p class="lede" style="margin-bottom:14px">Choose the brands and features. The hub writes a complete request. Paste it into Claude (desktop app or claude.ai) with the Claude in Chrome extension switched on, and Claude will visit the sites and reply with a table.</p>
+    <div class="row" style="margin-bottom:6px"><h3>Brands</h3><span class="hint" id="brandCount"></span></div>
+    <div class="picks" id="brandPicks"></div>
+    <div class="row" style="margin:16px 0 6px"><h3>Features</h3><span class="hint" id="featCount"></span></div>
+    <div id="featPicks"></div>
+    <label class="pick" style="margin-top:8px"><input type="checkbox" id="onlyGaps" checked><span>Only check what is missing, unknown or low confidence<small>Recommended. It avoids repeating work that is already solid.</small></span></label>
+    <div class="row" style="margin-top:14px;justify-content:space-between">
+      <span class="hint" id="reqSummary"></span>
+      <span class="row"><button class="btn ghost" id="bSaveRun" type="button">Note this run in the hub</button><button class="btn" id="bCopy" type="button">Copy request</button></span>
+    </div>
+    <textarea class="req" id="reqText" rows="12" readonly aria-label="Research request to paste into Claude"></textarea>
+    <ol class="ol hint" style="margin-top:12px">
+      <li>Press <b>Copy request</b>.</li>
+      <li>Open Claude with the Claude in Chrome extension on, start a new chat and paste it.</li>
+      <li>When Claude replies with a table, copy that table and continue to step 3.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="stephead"><span class="n">3</span><h2>Bring the results in</h2></div>
+    <p class="lede" style="margin-bottom:12px">Paste Claude's table here. The hub checks it, shows what it found and only saves rows that are complete.</p>
+    <textarea id="csvIn" rows="7" placeholder="Paste the table Claude gave you (the CSV text)" aria-label="Pasted results"></textarea>
+    <div class="row" style="margin-top:10px"><button class="btn ghost" id="bCheck" type="button">Check results</button><button class="btn needs-write" id="bImport" type="button" disabled>Save to the hub</button><span class="hint" id="importMsg"></span></div>
+    <div id="importPreview" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <div class="cardhead"><h2>Recent research runs</h2><span class="hint">Runs you noted in step 2</span></div>
+    <div class="scroll" id="runs"></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="tab-results" class="stack" aria-labelledby="t-results" hidden>
+  <div class="card">
+    <div class="tools">
+      <div class="field"><label for="clientSel">Highlight a brand (for example the client)</label><select id="clientSel"></select></div>
+      <button class="btn ghost" id="bExport" type="button">Save as CSV</button>
+      <span class="hint">Click any score to see why it got that number. Click a feature name to compare two brands side by side.</span>
+    </div>
+    <div id="dashEmpty" class="empty" hidden>No results for this country yet. Use Add and research to collect some.</div>
+    <iframe class="dash" id="dash" title="Results dashboard" sandbox="allow-scripts"></iframe>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section id="tab-guide" class="stack" aria-labelledby="t-guide" hidden>
+  <div class="card guide">
+    <div>
+      <h2 style="margin-bottom:8px">How the hub works</h2>
+      <ul>
+        <li><b>Coverage</b> shows every brand and feature for the chosen country, and which have been checked.</li>
+        <li><b>Add and research</b> is where you add brands, countries and features, ask Claude to research, and bring the answer back.</li>
+        <li><b>Results</b> turns everything checked so far into the comparison dashboard, with the reasoning behind each score.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="margin-bottom:8px">What the numbers mean</h2>
+      <ul>
+        <li><b>0</b> Not found. We looked and it is not there.</li>
+        <li><b>1</b> Information only, or a phone number or link elsewhere.</li>
+        <li><b>2</b> A working tool on the site that gives a result.</li>
+        <li><b>3</b> What the customer chose carries into a next step such as a dealer, finance or an order.</li>
+        <li><b>4</b> The whole task can be finished online and tracked.</li>
+        <li><b>?</b> Could not be checked. <b>N/A</b> does not apply to this brand.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 style="margin-bottom:8px">Working as a team</h2>
+      <ul>
+        <li>Everything is stored in one shared place. When a colleague saves results you see them without refreshing.</li>
+        <li>To add data you need Contributor access. Ask the person who owns this page to share it with you.</li>
+        <li>Rows marked with a dotted underline are low confidence. They are worth re-checking before a client sees them.</li>
+        <li>Each result records how it was checked, for example tested in a browser or navigation only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" aria-hidden="true">
+  <button class="x" id="dClose" aria-label="Close">&times;</button>
+  <div id="dBody"></div>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var DASH_TEMPLATE = __DASH_TEMPLATE__;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+  function nowIso() { return new Date().toISOString(); }
+  function today() { return new Date().toISOString().slice(0, 10); }
+
+  var METHODS = ['Tested in browser', 'Sitemap and navigation', 'Navigation only', 'Page fetch (not rendered)', 'Documentation or press'];
+  var STATUSES = ['Confirmed', 'Partial', 'Not found', 'Unknown'];
+  var CSV_HEAD = 'brand,category,capability,status,maturity_score,advanced,short_description,how_it_works,customer_value,url,page_title,date_accessed,limitations,confidence,method';
+
+  var S = {
+    countries: [], sites: {}, jobs: [], taxonomy: [], scope: [], hints: {}, settings: { clientBrand: '' },
+    country: null, tab: 'coverage', sel: { brands: {}, features: {} }, onlyGaps: true, import: null, dashKey: ''
+  };
+  var db = null, userCap = null, downloadsCap = null, me = null, canWrite = null, names = {};
+
+  /* ---------- small helpers ---------- */
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 4200);
+  }
+  function dbFail(e) {
+    var c = e && e.code;
+    if (c === 'quota_exceeded') toast('The hub is full. Ask the owner to clear space.');
+    else if (c === 'invalid_argument') toast('This did not save. You may have view-only access. Ask the owner for Contributor access.');
+    else if (c === 'rate_limited' || c === 'resource_exhausted') toast('Too many saves at once. Wait a moment and try again.');
+    else toast('Could not save. Check your connection and try again.');
+  }
+  function scoreInfo(sc) {
+    if (sc === '?') return { kind: 'unknown', cls: 'cell-unknown', label: '?' };
+    if (sc === 'N/A') return { kind: 'na', cls: 'cell-na', label: 'N/A' };
+    var n = parseInt(sc, 10);
+    if (isNaN(n) || n < 0 || n > 4) return { kind: 'blank', cls: 'cell-todo', label: '+' };
+    return { kind: 'numeric', n: n, cls: 'score-' + n, label: String(n) };
+  }
+  function capKey(cat, cap) { return cat + '||' + cap; }
+  function taxIndex(cat, cap) {
+    var ci = -1, k = -1;
+    S.taxonomy.forEach(function (c, i) { if (c.name === cat) { ci = i; k = c.capabilities.indexOf(cap); } });
+    return [ci < 0 ? 999 : ci, k < 0 ? 999 : k];
+  }
+  function sortCaps(list) {
+    return list.sort(function (a, b) {
+      var x = taxIndex(a.category, a.capability), y = taxIndex(b.category, b.capability);
+      return x[0] - y[0] || x[1] - y[1] || a.capability.localeCompare(b.capability);
+    });
+  }
+  function countrySites() {
+    return Object.keys(S.sites).map(function (id) { var s = S.sites[id]; return Object.assign({ id: id }, s); })
+      .filter(function (s) { return s.country === S.country; })
+      .sort(function (a, b) { return a.brand.localeCompare(b.brand); });
+  }
+  function trackedCaps(sites) {
+    var seen = {}, out = [];
+    function add(i) { var k = capKey(i.category, i.capability); if (!seen[k]) { seen[k] = 1; out.push({ category: i.category, capability: i.capability, key: k }); } }
+    S.scope.forEach(add);
+    sites.forEach(function (s) { (s.rows || []).forEach(add); });
+    return sortCaps(out);
+  }
+  function findRow(site, cap) {
+    var rows = site.rows || [];
+    for (var i = 0; i < rows.length; i++) if (rows[i].category === cap.category && rows[i].capability === cap.capability) return rows[i];
+    return null;
+  }
+  function needsWork(row) { return !row || row.status === 'Unknown' || row.score === '?' || row.confidence === 'Low'; }
+  function isQueued(site, cap) {
+    return S.jobs.some(function (j) {
+      return j.status === 'requested' && j.country === S.country && (j.brands || []).indexOf(site.brand) !== -1 && (j.features || []).indexOf(cap.capability) !== -1;
+    });
+  }
+
+  var renderQueued = false;
+  function scheduleRender() {
+    if (renderQueued) return; renderQueued = true;
+    setTimeout(function () { renderQueued = false; renderAll(); }, 30);
+  }
+
+  /* ---------- boot ---------- */
+  async function boot() {
+    bindUi();
+    var hash = (location.hash || '').replace('#', '');
+    if (['coverage', 'research', 'results', 'guide'].indexOf(hash) !== -1) S.tab = hash;
+    showTab(S.tab);
+    try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch (e) { db = null; }
+    try { userCap = window.claude && window.claude.use ? await window.claude.use('user') : null; } catch (e) { userCap = null; }
+    try { downloadsCap = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) { downloadsCap = null; }
+    if (!db) {
+      var n = $('notice'); n.hidden = false;
+      n.textContent = 'The shared database is not available in this view, so no data can be shown. Open this page from claude.ai while signed in to your organization.';
+      return;
+    }
+    if (userCap) {
+      try { me = await userCap.id(); } catch (e) { me = null; }
+      try { canWrite = await userCap.can('data.write'); } catch (e) { canWrite = null; }
+    }
+    applyWriteState();
+    subscribe();
+  }
+
+  function subscribe() {
+    var fail = function () { toast('Lost the connection to the shared data. Reload the page.'); };
+    db.collection('countries').onSnapshot(function (snap) {
+      S.countries = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return a.name.localeCompare(b.name); });
+      if (!S.country || !S.countries.some(function (c) { return c.name === S.country; })) {
+        var keep = null; try { keep = localStorage.getItem('hub.country'); } catch (e) {}
+        var pick = S.countries.filter(function (c) { return c.name === keep; })[0] || S.countries[0];
+        S.country = pick ? pick.name : null;
+      }
+      scheduleRender();
+    }, fail);
+    db.collection('sites').onSnapshot(function (snap) {
+      var m = {}; snap.docs.forEach(function (d) { m[d.id] = d.data(); }); S.sites = m; scheduleRender();
+    }, fail);
+    db.collection('jobs').orderBy('createdAt', 'desc').limit(30).onSnapshot(function (snap) {
+      S.jobs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }); scheduleRender(); resolveNames();
+    }, fail);
+    db.doc('meta/taxonomy').onSnapshot(function (d) { S.taxonomy = (d.exists && d.data().categories) || []; scheduleRender(); }, fail);
+    db.doc('meta/scope').onSnapshot(function (d) { S.scope = (d.exists && d.data().items) || []; scheduleRender(); }, fail);
+    db.doc('meta/hints').onSnapshot(function (d) { S.hints = (d.exists && d.data().hints) || {}; scheduleRender(); }, fail);
+    db.doc('meta/settings').onSnapshot(function (d) { S.settings = Object.assign({ clientBrand: '', hubUrl: '' }, d.exists ? d.data() : {}); scheduleRender(); }, fail);
+  }
+
+  async function resolveNames() {
+    if (!userCap || !userCap.profiles) return;
+    var ids = []; S.jobs.forEach(function (j) { if (j.createdBy && names[j.createdBy] === undefined && ids.indexOf(j.createdBy) === -1) ids.push(j.createdBy); });
+    if (!ids.length) return;
+    try { var ps = await userCap.profiles(ids); ids.forEach(function (id) { names[id] = (ps[id] && ps[id].name) || ''; }); scheduleRender(); } catch (e) {}
+  }
+
+  function applyWriteState() {
+    var blocked = canWrite === false;
+    document.querySelectorAll('.needs-write').forEach(function (b) { b.disabled = blocked || (b.id === 'bImport' && !S.import); });
+    var n = $('notice');
+    if (blocked) { n.hidden = false; n.textContent = 'You can look around but not add data. Ask the person who owns this page to give you Contributor access.'; }
+  }
+
+  /* ---------- UI wiring ---------- */
+  function showTab(name) {
+    S.tab = name;
+    ['coverage', 'research', 'results', 'guide'].forEach(function (t) {
+      $('tab-' + t).hidden = t !== name;
+      $('t-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
+    });
+    try { history.replaceState(null, '', '#' + name); } catch (e) {}
+    if (name === 'results') renderResults();
+  }
+
+  function bindUi() {
+    document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); }); });
+    $('countrySel').addEventListener('change', function () {
+      if (this.value === '__add__') { this.value = S.country || ''; showTab('research'); $('cName').focus(); $('cName').scrollIntoView({ block: 'center' }); return; }
+      S.country = this.value; try { localStorage.setItem('hub.country', S.country); } catch (e) {}
+      S.sel = { brands: {}, features: {} }; S.import = null; $('importPreview').innerHTML = ''; $('bImport').disabled = true; renderAll();
+    });
+    $('fCountry').addEventListener('submit', function (e) { e.preventDefault(); addCountry($('cName').value); });
+    $('fBrand').addEventListener('submit', function (e) { e.preventDefault(); addBrand($('bName').value, $('bUrl').value); });
+    $('fFeature').addEventListener('submit', function (e) { e.preventDefault(); addFeature($('fCat').value, $('fName').value, $('fHint').value); });
+    $('board').addEventListener('click', function (e) {
+      var c = e.target.closest('button.cell[data-site]'); if (c) { openCell(c.getAttribute('data-site'), c.getAttribute('data-cap'), c); return; }
+      var b = e.target.closest('button.brandbtn'); if (b) researchBrand(b.getAttribute('data-brand'));
+    });
+    $('nextup').addEventListener('click', function (e) { var b = e.target.closest('button[data-brand]'); if (b) researchBrand(b.getAttribute('data-brand')); });
+    $('brandPicks').addEventListener('change', function (e) { var i = e.target.closest('input[data-brand]'); if (i) { S.sel.brands[i.getAttribute('data-brand')] = i.checked; updateRequest(); } });
+    $('featPicks').addEventListener('change', function (e) { var i = e.target.closest('input[data-feat]'); if (i) { S.sel.features[i.getAttribute('data-feat')] = i.checked; updateRequest(); } });
+    $('featPicks').addEventListener('input', function (e) { if (e.target.id === 'featSearch') filterFeatures(e.target.value); });
+    $('onlyGaps').addEventListener('change', function () { S.onlyGaps = this.checked; updateRequest(); });
+    $('bCopy').addEventListener('click', copyRequest);
+    $('bSaveRun').addEventListener('click', saveRun);
+    $('bCheck').addEventListener('click', checkImport);
+    $('bImport').addEventListener('click', saveImport);
+    $('runs').addEventListener('click', function (e) { var b = e.target.closest('button[data-job]'); if (b) setJob(b.getAttribute('data-job'), b.getAttribute('data-to')); });
+    $('clientSel').addEventListener('change', function () { setClient(this.value); });
+    $('bExport').addEventListener('click', exportCsv);
+    $('dClose').addEventListener('click', closeDrawer);
+    $('scrim').addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('drawer').classList.contains('open')) closeDrawer(); });
+    $('dBody').addEventListener('click', function (e) { var b = e.target.closest('button[data-recheck]'); if (b) recheck(b.getAttribute('data-brand'), b.getAttribute('data-cap')); });
+  }
+
+  /* ---------- render ---------- */
+  function renderAll() {
+    renderCountrySel();
+    renderCoverage();
+    renderResearch();
+    renderRuns();
+    if (S.tab === 'results') renderResults();
+    applyWriteState();
+  }
+  function renderCountrySel() {
+    var sel = $('countrySel'), v = S.country;
+    sel.innerHTML = S.countries.map(function (c) { return '<option' + (c.name === v ? ' selected' : '') + '>' + esc(c.name) + '</option>'; }).join('') + '<option value="__add__">+ Add a country...</option>';
+    $('bCountryName').textContent = v || 'this country';
+    var fc = $('fCat'), cur = fc.value;
+    fc.innerHTML = S.taxonomy.map(function (c) { return '<option' + (c.name === cur ? ' selected' : '') + '>' + esc(c.name) + '</option>'; }).join('');
+  }
+
+  function renderCoverage() {
+    var sites = countrySites(), caps = trackedCaps(sites);
+    var cells = sites.length * caps.length, filled = 0, recheck = 0;
+    sites.forEach(function (s) { caps.forEach(function (c) { var r = findRow(s, c); if (r) { filled++; if (needsWork(r)) recheck++; } }); });
+    var pct = cells ? Math.round(filled / cells * 100) : 0;
+    $('stats').innerHTML =
+      '<div class="stat"><b class="num">' + sites.length + '</b><span>brands in ' + esc(S.country || 'this country') + '</span></div>' +
+      '<div class="stat"><b class="num">' + caps.length + '</b><span>features tracked</span></div>' +
+      '<div class="stat"><b class="num">' + pct + '%</b><span>of checks done (' + filled + ' of ' + cells + ')</span><div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+      '<div class="stat"><b class="num">' + recheck + '</b><span>worth re-checking (unknown or low confidence)</span></div>';
+    $('legend').innerHTML = [0, 1, 2, 3, 4].map(function (n) { return '<span><span class="cell score-' + n + '">' + n + '</span> ' + ['not found', 'information', 'interactive', 'connected', 'completed'][n] + '</span>'; }).join('') +
+      '<span><span class="cell cell-unknown">?</span> unknown</span><span><span class="cell cell-na">N/A</span> not applicable</span>' +
+      '<span><span class="cell cell-todo">+</span> not checked yet</span><span><span class="cell score-2 low"></span> dotted line = low confidence</span><span><span class="cell cell-todo queued"></span> queued for research</span>';
+    $('boardHint').textContent = 'Click a score to see the evidence. Click a brand to research it.';
+    if (!sites.length) { $('board').innerHTML = '<div class="empty">No brands in ' + esc(S.country || 'this country') + ' yet. Add one under Add and research.</div>'; $('nextup').innerHTML = ''; return; }
+    var groups = [], last = null;
+    caps.forEach(function (c) { if (last && last.name === c.category) last.n++; else { last = { name: c.category, n: 1 }; groups.push(last); } });
+    var html = '<table class="board" style="width:' + (176 + caps.length * 38) + 'px"><colgroup><col style="width:176px">' + caps.map(function () { return '<col style="width:38px">'; }).join('') + '</colgroup><thead><tr><th class="corner" rowspan="2">Brand</th>' +
+      groups.map(function (g) { return '<th class="cat" colspan="' + g.n + '" title="' + esc(g.name) + '">' + esc(g.name) + '</th>'; }).join('') + '</tr><tr class="caps">' +
+      caps.map(function (c) { return '<th class="cap" title="' + esc(c.category) + '"><span>' + esc(c.capability) + '</span></th>'; }).join('') + '</tr></thead><tbody>';
+    var todoByBrand = [];
+    sites.forEach(function (s) {
+      var todo = 0;
+      var tds = caps.map(function (c) {
+        var r = findRow(s, c), q = isQueued(s, c), st = '';
+        if (!r) { todo++; return '<td><button class="cell cell-todo' + (q ? ' queued' : '') + '" data-site="' + esc(s.id) + '" data-cap="' + esc(c.key) + '" aria-label="' + esc(s.brand + ', ' + c.capability + ', not checked yet') + '">+</button></td>'; }
+        var si = scoreInfo(r.score); if (needsWork(r)) todo++;
+        return '<td><button class="cell ' + si.cls + (r.confidence === 'Low' ? ' low' : '') + (q ? ' queued' : '') + '" data-site="' + esc(s.id) + '" data-cap="' + esc(c.key) + '" aria-label="' + esc(s.brand + ', ' + c.capability + ', score ' + si.label) + '">' + esc(si.label) + (r.advanced ? '<span class="st">&#9733;</span>' : '') + '</button></td>';
+      }).join('');
+      todoByBrand.push({ brand: s.brand, todo: todo });
+      html += '<tr><td class="brand"><button class="brandbtn" data-brand="' + esc(s.brand) + '">' + esc(s.brand) + '</button><span class="todo">' + (todo ? todo + ' to check' : 'all checked') + '</span></td>' + tds + '</tr>';
+    });
+    $('board').innerHTML = html + '</tbody></table>';
+    todoByBrand.sort(function (a, b) { return b.todo - a.todo; });
+    $('nextup').innerHTML = todoByBrand.filter(function (t) { return t.todo > 0; }).slice(0, 6).map(function (t) {
+      return '<div class="next"><div><b>' + esc(t.brand) + '</b><div class="hint">' + t.todo + ' of ' + caps.length + ' features to check or re-check</div></div><button class="btn ghost small" data-brand="' + esc(t.brand) + '">Research ' + esc(t.brand) + '</button></div>';
+    }).join('') || '<div class="empty" style="grid-column:1/-1">Everything tracked is checked. Add a feature or a brand to keep going.</div>';
+  }
+
+  /* ---------- detail drawer ---------- */
+  function openCell(siteId, key, trigger) {
+    var s = S.sites[siteId]; if (!s) return;
+    var parts = key.split('||'), cap = { category: parts[0], capability: parts[1], key: key };
+    var r = findRow(s, cap);
+    var si = r ? scoreInfo(r.score) : { kind: 'blank', cls: 'cell-todo', label: '+' };
+    var title = !r ? 'Not checked yet' : si.kind === 'numeric' ? 'Score ' + si.n + ' of 4' : si.kind === 'unknown' ? 'Could not be verified' : si.kind === 'na' ? 'Not applicable' : 'No finding';
+    var src = r && r.url ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.title || r.url) + '</a>' : '&ndash;';
+    var html = '<div class="hint">' + esc(cap.category) + ' &middot; ' + esc(S.country) + '</div><h2 id="dTitle">' + esc(cap.capability) + ' &middot; ' + esc(s.brand) + '</h2>' +
+      '<div class="verdict"><span class="cell ' + si.cls + '">' + esc(si.label) + '</span><div><b>' + esc(title) + '</b><div class="hint">' + esc(r ? r.status : 'No evidence saved for this yet') + '</div></div></div>';
+    if (S.hints[cap.capability]) html += '<h3>What we look for</h3><p>' + esc(S.hints[cap.capability]) + '</p>';
+    if (r) {
+      if (r.description) html += '<h3>What we observed</h3><p>' + esc(r.description) + '</p>';
+      if (r.how) html += '<h3>How it works</h3><p>' + esc(r.how) + '</p>';
+      if (r.value) html += '<h3>Why it matters</h3><p>' + esc(r.value) + '</p>';
+      if (r.limitations) html += '<h3>Caveats</h3><div class="cav">' + esc(r.limitations) + '</div>';
+      html += '<h3>Evidence</h3><dl><dt>Source</dt><dd>' + src + '</dd><dt>Checked</dt><dd>' + esc(r.date || '&ndash;') + '</dd><dt>How we checked</dt><dd>' + esc(r.method || 'Not recorded') + '</dd><dt>Confidence</dt><dd>' + (r.confidence ? '<span class="pill ' + esc(r.confidence) + '">' + esc(r.confidence) + '</span>' : '&ndash;') + '</dd></dl>';
+    }
+    html += '<div style="margin-top:18px"><button class="btn" data-recheck="1" data-brand="' + esc(s.brand) + '" data-cap="' + esc(key) + '">' + (r ? 'Re-check this' : 'Research this') + '</button><p class="hint" style="margin-top:8px">This does not search by itself. It opens Add and research with this brand and feature already ticked, so you can copy a request for Claude.</p></div>';
+    $('dBody').innerHTML = html;
+    $('drawer').classList.add('open'); $('scrim').classList.add('open'); $('drawer').setAttribute('aria-hidden', 'false');
+    $('drawer')._trigger = trigger || null; $('dClose').focus();
+  }
+  function closeDrawer() {
+    $('drawer').classList.remove('open'); $('scrim').classList.remove('open'); $('drawer').setAttribute('aria-hidden', 'true');
+    var t = $('drawer')._trigger; if (t && t.focus) t.focus();
+  }
+  function recheck(brand, key) {
+    closeDrawer(); S.sel = { brands: {}, features: {} }; S.sel.brands[brand] = true;
+    S.sel.features[key.split('||')[1]] = true; S.onlyGaps = false; $('onlyGaps').checked = false;
+    showTab('research'); renderResearch(); $('reqText').scrollIntoView({ block: 'center' });
+  }
+  function researchBrand(brand) {
+    S.sel = { brands: {}, features: {} }; S.sel.brands[brand] = true; S.onlyGaps = true; $('onlyGaps').checked = true;
+    trackedCaps(countrySites()).forEach(function (c) { S.sel.features[c.capability] = true; });
+    showTab('research'); renderResearch();
+  }
+
+  /* ---------- research request ---------- */
+  function renderResearch() {
+    var sites = countrySites(), caps = trackedCaps(sites);
+    var gapsFor = function (s) { return caps.filter(function (c) { return needsWork(findRow(s, c)); }).length; };
+    $('brandPicks').innerHTML = sites.map(function (s) {
+      return '<label class="pick"><input type="checkbox" data-brand="' + esc(s.brand) + '"' + (S.sel.brands[s.brand] ? ' checked' : '') + '><span>' + esc(s.brand) + '<small>' + gapsFor(s) + ' to check</small></span></label>';
+    }).join('') || '<div class="hint">Add a brand in step 1 first.</div>';
+    $('brandCount').textContent = sites.length ? 'Tick the brands to research' : '';
+    var byCat = {}; caps.forEach(function (c) { (byCat[c.category] = byCat[c.category] || []).push(c); });
+    var trackedKeys = {}; caps.forEach(function (c) { trackedKeys[c.capability] = 1; });
+    var html = Object.keys(byCat).map(function (cat) {
+      return '<h3 class="cathead">' + esc(cat) + '</h3><div class="picks">' + byCat[cat].map(function (c) {
+        return '<label class="pick"><input type="checkbox" data-feat="' + esc(c.capability) + '" data-cat="' + esc(c.category) + '"' + (S.sel.features[c.capability] ? ' checked' : '') + '><span>' + esc(c.capability) + '</span></label>';
+      }).join('') + '</div>';
+    }).join('');
+    var more = S.taxonomy.map(function (t) {
+      var rest = t.capabilities.filter(function (c) { return !trackedKeys[c]; });
+      return rest.length ? '<h3 class="cathead more-cat">' + esc(t.name) + '</h3><div class="picks more-list">' + rest.map(function (c) {
+        return '<label class="pick" data-name="' + esc(c.toLowerCase()) + '"><input type="checkbox" data-feat="' + esc(c) + '" data-cat="' + esc(t.name) + '"' + (S.sel.features[c] ? ' checked' : '') + '><span>' + esc(c) + '</span></label>';
+      }).join('') + '</div>' : '';
+    }).join('');
+    var searchVal = ($('featSearch') && $('featSearch').value) || '';
+    var wasOpen = $('featMore') && $('featMore').open;
+    $('featPicks').innerHTML = html + '<details class="more" id="featMore"' + (wasOpen ? ' open' : '') + '><summary>More features from the full framework</summary><div class="field" style="margin:8px 0"><label for="featSearch">Search features</label><input type="text" id="featSearch" value="' + esc(searchVal) + '" placeholder="For example chat, charging, loyalty"></div>' + more + '</details>';
+    if (searchVal) filterFeatures(searchVal);
+    $('featCount').textContent = 'Tick the features to check';
+    updateRequest();
+  }
+  function filterFeatures(q) {
+    q = q.toLowerCase().trim();
+    document.querySelectorAll('#featMore .pick').forEach(function (l) { l.hidden = q && l.getAttribute('data-name').indexOf(q) === -1; });
+  }
+  function plan() {
+    var sites = countrySites(), caps = trackedCaps(sites), capByName = {};
+    caps.forEach(function (c) { capByName[c.capability] = c; });
+    S.taxonomy.forEach(function (t) { t.capabilities.forEach(function (n) { if (!capByName[n]) capByName[n] = { category: t.name, capability: n, key: capKey(t.name, n) }; }); });
+    var feats = Object.keys(S.sel.features).filter(function (f) { return S.sel.features[f]; });
+    var out = [];
+    sites.forEach(function (s) {
+      if (!S.sel.brands[s.brand]) return;
+      var list = feats.filter(function (f) { var c = capByName[f]; return c && (!S.onlyGaps || needsWork(findRow(s, c))); }).map(function (f) { return capByName[f]; });
+      if (list.length) out.push({ site: s, caps: list });
+    });
+    return out;
+  }
+  function buildRequest(p) {
+    var used = {}, catOf = {};
+    p.forEach(function (x) { x.caps.forEach(function (c) { used[c.capability] = 1; catOf[c.capability] = c.category; }); });
+    var lines = [];
+    lines.push('Please research how car brand websites in ' + S.country + ' let customers do things online. This is for the Benchmark Hub, so judge only from what you can actually open and use on the live sites.');
+    lines.push('');
+    lines.push('WHAT TO CHECK');
+    p.forEach(function (x) { lines.push('- ' + x.site.brand + (x.site.url ? ' (' + x.site.url + ')' : ' (no website given: first find the official ' + x.site.brand + ' website for ' + S.country + ' and say which address you used)') + ': ' + x.caps.map(function (c) { return c.capability; }).join('; ')); });
+    lines.push('');
+    lines.push('WHAT TO LOOK FOR IN EACH FEATURE');
+    Object.keys(used).forEach(function (f) { lines.push('- ' + f + ' (' + catOf[f] + ')' + (S.hints[f] ? ': ' + S.hints[f] : '')); });
+    lines.push('');
+    lines.push('HOW TO WORK (cheapest first)');
+    lines.push('1. If a site has a sitemap.xml, read it, or read the main navigation, to see which pages exist.');
+    lines.push('2. Open the relevant page in the browser and really use the tool: click colour swatches, run a search, open the form. Do not submit forms with personal details, do not create accounts and do not make payments.');
+    lines.push('3. Never guess URLs. If a page is blocked (for example by Cloudflare or a bot check), record the feature as Unknown and do not try to get around the block.');
+    lines.push('4. If you cannot find a feature, say where you looked. Do not assume it is absent.');
+    lines.push('');
+    lines.push('SCORING (maturity_score)');
+    lines.push('0 = Not found: searched and confirmed absent');
+    lines.push('1 = Information only, or a phone number or link elsewhere, no tool on the site');
+    lines.push('2 = A tool on the site that gives a result you actually observed');
+    lines.push('3 = The result carries into a next step (dealer, finance, account, order)');
+    lines.push('4 = Completed online with a trackable outcome');
+    lines.push('? = Unknown, could not be verified.   N/A = does not apply to this brand (for example no EV in the range).');
+    lines.push('status is one of: Confirmed, Partial (entry point seen but not fully used), Not found, Unknown.');
+    lines.push('confidence: High = you used it yourself; Medium = seen but not fully used, or partly from documentation; Low = indirect or a single glimpse.');
+    lines.push('method is one of: ' + METHODS.join(', ') + '.');
+    lines.push('advanced is yes only for unusually deep functionality, otherwise no.');
+    lines.push('');
+    lines.push('ANSWER FORMAT');
+    lines.push('Reply with ONE table in CSV format inside a single code block, one row per brand and feature, with exactly this header line:');
+    lines.push(CSV_HEAD);
+    lines.push('short_description = what a customer can do. how_it_works = what you saw when you used it. limitations = what you could not check. url = the exact page you used. date_accessed = today as YYYY-MM-DD. Put text that contains commas in double quotes.');
+    lines.push('Do not add anything else inside the code block. After the block, list anything you could not open and why.');
+    return lines.join('\n');
+  }
+  function updateRequest() {
+    var p = plan(), n = 0; p.forEach(function (x) { n += x.caps.length; });
+    if (!p.length) {
+      $('reqText').value = ''; $('reqText').placeholder = 'Tick at least one brand and one feature above. The request appears here.';
+      $('reqSummary').textContent = Object.keys(S.sel.brands).some(function (b) { return S.sel.brands[b]; }) && Object.keys(S.sel.features).some(function (f) { return S.sel.features[f]; }) && S.onlyGaps ? 'Nothing left to check for these picks. Untick "Only check what is missing" to redo them.' : '';
+      $('bCopy').disabled = true; $('bSaveRun').disabled = true; return;
+    }
+    $('reqText').value = buildRequest(p);
+    $('reqSummary').textContent = p.length + (p.length === 1 ? ' brand' : ' brands') + ', ' + n + (n === 1 ? ' check' : ' checks');
+    $('bCopy').disabled = false; $('bSaveRun').disabled = canWrite === false;
+  }
+  async function copyRequest() {
+    var t = $('reqText'); t.focus(); t.select();
+    try { await navigator.clipboard.writeText(t.value); toast('Request copied. Paste it into Claude.'); }
+    catch (e) { toast('Press Ctrl+C (or Cmd+C) to copy the selected text.'); }
+  }
+  async function saveRun() {
+    var p = plan(); if (!p.length) return;
+    var feats = {}; p.forEach(function (x) { x.caps.forEach(function (c) { feats[c.capability] = 1; }); });
+    try {
+      await db.collection('jobs').add({ country: S.country, brands: p.map(function (x) { return x.site.brand; }), features: Object.keys(feats), status: 'requested', createdBy: me || '', createdAt: nowIso() });
+      toast('Run noted. The board now shows those cells as queued.');
+    } catch (e) { dbFail(e); }
+  }
+  function renderRuns() {
+    var jobs = S.jobs.filter(function (j) { return j.country === S.country; }).slice(0, 10);
+    if (!jobs.length) { $('runs').innerHTML = '<div class="empty">No runs noted for ' + esc(S.country || 'this country') + ' yet.</div>'; return; }
+    $('runs').innerHTML = '<table class="grid"><thead><tr><th>When</th><th>Brands</th><th>Features</th><th>By</th><th>Status</th><th></th></tr></thead><tbody>' + jobs.map(function (j) {
+      var who = j.createdBy ? (names[j.createdBy] || 'A colleague') : 'Unknown';
+      var when = (j.createdAt || '').slice(0, 10);
+      var acts = j.status === 'requested' ? '<button class="btn ghost small needs-write" data-job="' + esc(j.id) + '" data-to="done">Mark done</button> <button class="btn ghost small needs-write" data-job="' + esc(j.id) + '" data-to="cancelled">Cancel</button>' : '';
+      return '<tr><td class="num">' + esc(when) + '</td><td>' + esc((j.brands || []).join(', ')) + '</td><td>' + esc((j.features || []).length) + ' features</td><td>' + esc(who) + '</td><td><span class="pill ' + esc(j.status) + '">' + esc(j.status) + '</span></td><td>' + acts + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  }
+  async function setJob(id, to) {
+    try { await db.doc('jobs/' + id).update({ status: to, updatedAt: nowIso() }); } catch (e) { dbFail(e); }
+  }
+
+  /* ---------- setup writes ---------- */
+  async function addCountry(name) {
+    name = (name || '').trim(); if (!name) return;
+    var id = slug(name); if (!id) { toast('Use letters or numbers in the country name.'); return; }
+    try {
+      var d = await db.doc('countries/' + id).get();
+      if (d.exists) { toast(name + ' is already on the hub.'); S.country = d.data().name; renderAll(); return; }
+      await db.doc('countries/' + id).set({ name: name, createdBy: me || '', createdAt: nowIso() });
+      S.country = name; try { localStorage.setItem('hub.country', name); } catch (e) {}
+      $('cName').value = ''; toast(name + ' added.');
+    } catch (e) { dbFail(e); }
+  }
+  async function addBrand(name, url) {
+    name = (name || '').trim(); url = (url || '').trim();
+    if (!S.country) { toast('Add a country first.'); return; }
+    if (!name) return;
+    var id = slug(S.country) + '__' + slug(name);
+    try {
+      var d = await db.doc('sites/' + id).get();
+      if (d.exists) { toast(name + ' is already listed for ' + S.country + '.'); return; }
+      await db.doc('sites/' + id).set({ country: S.country, brand: name, url: url, rows: [], updatedAt: nowIso(), updatedBy: me || '' });
+      $('bName').value = ''; $('bUrl').value = ''; toast(name + ' added to ' + S.country + '.');
+    } catch (e) { dbFail(e); }
+  }
+  async function addFeature(cat, name, hint) {
+    name = (name || '').trim(); if (!name || !cat) return;
+    try {
+      var cats = S.taxonomy.map(function (c) { return { name: c.name, capabilities: c.capabilities.slice() }; });
+      var c = cats.filter(function (x) { return x.name === cat; })[0];
+      if (!c) { c = { name: cat, capabilities: [] }; cats.push(c); }
+      if (c.capabilities.indexOf(name) === -1) { c.capabilities.push(name); await db.doc('meta/taxonomy').set({ categories: cats }); }
+      var items = S.scope.slice();
+      if (!items.some(function (i) { return i.category === cat && i.capability === name; })) { items.push({ category: cat, capability: name }); await db.doc('meta/scope').set({ items: items }); }
+      if (hint && hint.trim()) await db.doc('meta/hints').set({ hints: Object.assign({}, S.hints, (function () { var o = {}; o[name] = hint.trim(); return o; })()) });
+      $('fName').value = ''; $('fHint').value = ''; toast(name + ' is now tracked for every country.');
+    } catch (e) { dbFail(e); }
+  }
+
+  /* ---------- import ---------- */
+  function parseCSV(text) {
+    text = text.replace(/^\s*```[a-z]*\s*/i, '').replace(/```\s*$/i, '').replace(/^﻿/, '');
+    var rows = [], row = [], cur = '', q = false, i = 0;
+    for (; i < text.length; i++) {
+      var ch = text[i];
+      if (q) {
+        if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === ',') { row.push(cur); cur = ''; }
+      else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+      else if (ch !== '\r') cur += ch;
+    }
+    if (cur.length || row.length) { row.push(cur); rows.push(row); }
+    return rows.filter(function (r) { return r.some(function (c) { return c.trim() !== ''; }); });
+  }
+  var ALIAS = { maturity_score: 'score', score: 'score', short_description: 'description', description: 'description', how_it_works: 'how', how: 'how', customer_value: 'value', value: 'value', page_title: 'title', title: 'title', date_accessed: 'date', date: 'date' };
+  function checkImport() {
+    var text = $('csvIn').value.trim();
+    if (!text) { $('importMsg').textContent = 'Paste the table first.'; return; }
+    var grid = parseCSV(text);
+    if (grid.length < 2) { $('importMsg').textContent = 'That does not look like a table with a header and rows.'; return; }
+    var head = grid[0].map(function (h) { var k = h.trim().toLowerCase().replace(/\s+/g, '_'); return ALIAS[k] || k; });
+    var need = ['brand', 'category', 'capability', 'status', 'score'], miss = need.filter(function (n) { return head.indexOf(n) === -1; });
+    if (miss.length) { $('importMsg').textContent = 'The header is missing: ' + miss.join(', ') + '.'; return; }
+    var sites = countrySites(), byBrand = {}; sites.forEach(function (s) { byBrand[s.brand.toLowerCase()] = s; });
+    var catOf = {}; S.taxonomy.forEach(function (t) { t.capabilities.forEach(function (c) { catOf[c.toLowerCase()] = t.name; }); });
+    var catNames = {}; S.taxonomy.forEach(function (t) { catNames[t.name.toLowerCase()] = t.name; });
+    var good = [], issues = [], newBrands = {};
+    for (var r = 1; r < grid.length; r++) {
+      var o = {}; head.forEach(function (h, i) { o[h] = (grid[r][i] || '').trim(); });
+      var line = r + 1, tag = 'Row ' + line + ' (' + (o.brand || '?') + ', ' + (o.capability || '?') + ')', errs = [];
+      if (!o.brand) errs.push('brand is empty'); if (!o.capability) errs.push('feature is empty');
+      var st = STATUSES.filter(function (x) { return x.toLowerCase() === (o.status || '').toLowerCase(); })[0];
+      if (!st) errs.push('status must be Confirmed, Partial, Not found or Unknown');
+      var sc = (o.score || '').toUpperCase() === 'N/A' ? 'N/A' : (o.score || '').trim();
+      if (['0', '1', '2', '3', '4', '?', 'N/A'].indexOf(sc) === -1) errs.push('score must be 0 to 4, ? or N/A');
+      var conf = ['High', 'Medium', 'Low'].filter(function (x) { return x.toLowerCase() === (o.confidence || '').toLowerCase(); })[0];
+      if (!conf) errs.push('confidence must be High, Medium or Low');
+      var cat = catNames[(o.category || '').toLowerCase()] || catOf[(o.capability || '').toLowerCase()] || (o.category || '').toUpperCase();
+      if (!cat) errs.push('area (category) is empty');
+      if (st === 'Not found' && /^[1-4]$/.test(sc)) errs.push('Not found cannot have a score above 0');
+      if (st === 'Confirmed' && (sc === '0' || sc === '?')) errs.push('Confirmed needs a score of 1 to 4');
+      if (st === 'Unknown' && /^[0-4]$/.test(sc)) errs.push('Unknown should use ? as the score');
+      if ((st === 'Confirmed' || st === 'Partial') && !o.url) errs.push('a source URL is needed');
+      if (errs.length) { issues.push(tag + ': ' + errs.join('; ')); continue; }
+      var site = byBrand[o.brand.toLowerCase()];
+      if (!site) newBrands[o.brand] = 1;
+      good.push({ brand: site ? site.brand : o.brand, row: {
+        category: cat, capability: o.capability, status: st, score: sc, advanced: /^(yes|y|true|1)$/i.test(o.advanced || ''),
+        description: o.description || '', how: o.how || '', value: o.value || '', url: o.url || '', title: o.title || '', date: o.date || today(),
+        limitations: o.limitations || '', confidence: conf, method: METHODS.filter(function (m) { return m.toLowerCase() === (o.method || '').toLowerCase(); })[0] || (o.method || 'Not recorded')
+      } });
+    }
+    S.import = { good: good, newBrands: Object.keys(newBrands) };
+    var brandSet = {}; good.forEach(function (g) { brandSet[g.brand] = 1; });
+    var html = '<div class="row" style="align-items:center"><b class="' + (good.length ? 'okc' : 'bad') + '">' + good.length + ' rows ready to save</b>' + (issues.length ? '<b class="bad">' + issues.length + ' need fixing</b>' : '') + '<span class="hint">for ' + Object.keys(brandSet).length + ' brands in ' + esc(S.country) + '</span></div>';
+    if (S.import.newBrands.length) html += '<p class="hint" style="margin-top:6px">New brands will be added to ' + esc(S.country) + ': ' + esc(S.import.newBrands.join(', ')) + '.</p>';
+    if (issues.length) html += '<div class="issues" style="margin-top:8px"><b>Rows that will be skipped</b><ul>' + issues.slice(0, 40).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + (issues.length > 40 ? '<li>and ' + (issues.length - 40) + ' more</li>' : '') + '</ul><div class="hint" style="margin-top:6px">Ask Claude to fix these rows and paste the corrected table.</div></div>';
+    if (good.length) html += '<div class="scroll" style="margin-top:10px"><table class="grid"><thead><tr><th>Brand</th><th>Feature</th><th>Score</th><th>Status</th><th>Confidence</th></tr></thead><tbody>' + good.slice(0, 12).map(function (g) {
+      var si = scoreInfo(g.row.score); return '<tr><td>' + esc(g.brand) + '</td><td>' + esc(g.row.capability) + '</td><td><span class="cell ' + si.cls + '" style="cursor:default">' + esc(si.label) + '</span></td><td>' + esc(g.row.status) + '</td><td><span class="pill ' + esc(g.row.confidence) + '">' + esc(g.row.confidence) + '</span></td></tr>';
+    }).join('') + '</tbody></table>' + (good.length > 12 ? '<div class="hint" style="margin-top:6px">Showing 12 of ' + good.length + '.</div>' : '') + '</div>';
+    $('importPreview').innerHTML = html;
+    $('importMsg').textContent = '';
+    $('bImport').disabled = !good.length || canWrite === false;
+  }
+  async function saveImport() {
+    if (!S.import || !S.import.good.length) return;
+    var country = S.country, groups = {};
+    S.import.good.forEach(function (g) { (groups[g.brand] = groups[g.brand] || []).push(g.row); });
+    $('bImport').disabled = true; $('importMsg').textContent = 'Saving...';
+    var saved = 0, newScope = [];
+    try {
+      for (var brand in groups) {
+        var id = slug(country) + '__' + slug(brand), existing = S.sites[id];
+        var rows = existing && existing.rows ? existing.rows.slice() : [];
+        groups[brand].forEach(function (nr) {
+          var idx = -1; rows.forEach(function (r, i) { if (r.category === nr.category && r.capability === nr.capability) idx = i; });
+          if (idx >= 0) rows[idx] = nr; else rows.push(nr);
+          if (!S.scope.some(function (s) { return s.category === nr.category && s.capability === nr.capability; }) && !newScope.some(function (s) { return s.category === nr.category && s.capability === nr.capability; })) newScope.push({ category: nr.category, capability: nr.capability });
+        });
+        await db.doc('sites/' + id).set({ country: country, brand: existing ? existing.brand : brand, url: existing ? (existing.url || '') : '', rows: rows, updatedAt: nowIso(), updatedBy: me || '' });
+        saved += groups[brand].length;
+      }
+      if (newScope.length) await db.doc('meta/scope').set({ items: S.scope.concat(newScope) });
+      var known = {}; S.taxonomy.forEach(function (t) { t.capabilities.forEach(function (c) { known[t.name + '||' + c] = 1; }); });
+      var addTax = newScope.filter(function (n) { return !known[n.category + '||' + n.capability]; });
+      if (addTax.length) {
+        var cats = S.taxonomy.map(function (c) { return { name: c.name, capabilities: c.capabilities.slice() }; });
+        addTax.forEach(function (n) { var c = cats.filter(function (x) { return x.name === n.category; })[0]; if (!c) { c = { name: n.category, capabilities: [] }; cats.push(c); } c.capabilities.push(n.capability); });
+        await db.doc('meta/taxonomy').set({ categories: cats });
+      }
+      S.import = null; $('csvIn').value = ''; $('importPreview').innerHTML = '';
+      $('importMsg').textContent = ''; toast(saved + ' results saved. Open Coverage or Results to see them.');
+    } catch (e) { dbFail(e); $('importMsg').textContent = 'Saving stopped part-way. Check Coverage, then paste the rest again.'; }
+  }
+
+  /* ---------- results ---------- */
+  function buildDashData() {
+    var sites = countrySites(), caps = trackedCaps(sites), rows = [], brands = sites.map(function (s) { return s.brand; });
+    var researched = {};
+    caps.forEach(function (c) {
+      sites.forEach(function (s) {
+        var r = findRow(s, c), si = r ? scoreInfo(r.score) : { kind: 'blank', cls: 'cell-blank', label: '–' };
+        var cls = si.cls === 'cell-todo' ? 'cell-blank' : si.cls, label = si.kind === 'blank' ? '–' : si.label;
+        if (r) researched[c.category + '|' + c.capability] = 1;
+        rows.push({
+          category: c.category, capability: c.capability, brand: s.brand, status: r ? r.status : 'Not researched', score_class: cls, score_label: label,
+          advanced: !!(r && r.advanced), description: r ? r.description : '', value: r ? r.value : '', url: r ? r.url : '', confidence: r ? r.confidence : '',
+          score: si.kind === 'numeric' ? si.n : null, score_kind: si.kind, how: r ? r.how : '', limitations: r ? r.limitations : '', date: r ? r.date : '',
+          page_title: r ? r.title : '', method: r ? r.method : ''
+        });
+      });
+    });
+    var coverage = S.taxonomy.map(function (t) {
+      var n = 0; Object.keys(researched).forEach(function (k) { if (k.split('|')[0] === t.name) n++; });
+      return { category: t.name, researched: n, in_taxonomy: t.capabilities.length };
+    });
+    return { snapshot: S.country + ' (live hub data)', previous: null, brands: brands, rows: rows, novelty: [], categoryCoverage: coverage, positioning: {} };
+  }
+  function renderResults() {
+    var sites = countrySites();
+    var opts = '<option value="">None</option>' + sites.map(function (s) { return '<option' + (s.brand === S.settings.clientBrand ? ' selected' : '') + '>' + esc(s.brand) + '</option>'; }).join('');
+    if ($('clientSel').innerHTML !== opts) $('clientSel').innerHTML = opts;
+    var has = sites.some(function (s) { return (s.rows || []).length; });
+    $('dashEmpty').hidden = has; $('dash').hidden = !has;
+    if (!has) return;
+    var data = buildDashData(), client = S.settings.clientBrand || '';
+    var key = S.country + '|' + client + '|' + JSON.stringify(data.rows.map(function (r) { return [r.brand, r.capability, r.score_label, r.status, r.date, r.confidence, r.method, r.description.length]; }));
+    if (key === S.dashKey) return; S.dashKey = key;
+    var html = DASH_TEMPLATE.split('__TITLE__').join(esc('Benchmark, ' + S.country))
+      .split('__DATA__').join(JSON.stringify(data).replace(/</g, '\\u003c'))
+      .split("var HIGHLIGHT_BRAND = 'Mitsubishi';").join('var HIGHLIGHT_BRAND = ' + JSON.stringify(client) + ';')
+      .split('Mitsubishi (client)').join(client ? esc(client) + ' (highlighted)' : 'no brand highlighted');
+    $('dash').srcdoc = html;
+  }
+  async function setClient(v) {
+    try { await db.doc('meta/settings').set(Object.assign({}, S.settings, { clientBrand: v })); } catch (e) { dbFail(e); }
+  }
+  async function exportCsv() {
+    if (!downloadsCap) { toast('Saving files is not available in this view.'); return; }
+    var head = ['brand', 'category', 'capability', 'status', 'maturity_score', 'advanced', 'short_description', 'how_it_works', 'customer_value', 'url', 'page_title', 'date_accessed', 'limitations', 'confidence', 'method'];
+    var q = function (v) { v = v == null ? '' : String(v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var lines = [head.join(',')];
+    countrySites().forEach(function (s) { (s.rows || []).forEach(function (r) {
+      lines.push([s.brand, r.category, r.capability, r.status, r.score, r.advanced ? 'yes' : 'no', r.description, r.how, r.value, r.url, r.title, r.date, r.limitations, r.confidence, r.method].map(q).join(','));
+    }); });
+    try { await downloadsCap.save({ filename: 'benchmark-' + slug(S.country) + '-' + today() + '.csv', data: lines.join('\n') }); }
+    catch (e) { if (!e || e.code !== 'declined') toast('The file could not be saved.'); }
+  }
+
+  boot();
+})();
+</script>

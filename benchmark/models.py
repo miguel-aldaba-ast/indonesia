@@ -31,6 +31,7 @@ FIELDNAMES = [
     "screenshot_reference",
     "limitations",
     "confidence",          # High | Medium | Low
+    "method",              # how it was checked (optional): e.g. Tested in browser, Sitemap, Navigation only
 ]
 
 
@@ -52,6 +53,7 @@ class EvidenceRow:
     screenshot_reference: str = ""
     limitations: str = ""
     confidence: str = ""
+    method: str = ""
 
     @classmethod
     def from_dict(cls, d: dict) -> "EvidenceRow":
